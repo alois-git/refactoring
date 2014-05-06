@@ -15,6 +15,7 @@
 \usepackage[margin=0.7in]{geometry}
 \usepackage{multirow}
 \usepackage{xparse}
+\usepackage{tikz}
 
 \newcommand\si[2]{\numprint[#2]{#1}}
 \newcommand\np[1]{\numprint{#1}}
@@ -23,7 +24,7 @@
 
 \NewDocumentEnvironment{myfig}{mm}
 {\begin{figure}[!ht]\centering}
-{\caption{#2}\label{fig:#1}\end{figure}}
+{\caption{#2}\label{#1}\end{figure}}
 
 \usepackage[Conny]{fncychap}
 
@@ -40,9 +41,8 @@
   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
   frame=single,                    % adds a frame around the code
-  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
-  language=java,                 % the language of the code
+  language=Java,                   % the language of the code
   morekeywords={*,...},            % if you want to add more keywords to the set
   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
@@ -51,9 +51,10 @@
   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
   showstringspaces=false,          % underline spaces within strings only
   showtabs=false,                  % show tabs within strings adding particular underscores
-  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
   stringstyle=\color{mymauve},     % string literal style
   tabsize=2,                       % sets default tabsize to 2 spaces
+  columns=flexible,
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
@@ -140,11 +141,9 @@ typedGraph.img
 On voit içi toutes les relations possible entre les nodes en fonction de leur type.
 On peut aussi observer quelques cardinalité comme le maximum 1 d'une même définition de méthode dans une classe.
 
-Si ces conditions ne sont pas respectées dans un graph, ce graph ne sera pas valide en d'autre terme, il ne représentera pas un programme compilable.
+Si ces conditions ne sont pas respectées dans un graph, ce graph ne sera pas valide. En d'autre terme, il ne représentera pas un programme doté d'une syntaxe correcte.
 
-Malheureusement toutes les contraintes necessaire ne sont pas représentable à l'aide d'un graph de type.
-
-Les voici :
+Malheureusement toutes les contraintes necessaires ne sont pas représentables à l'aide d'un graph de type.
 
 \begin{enumerate}
 \item une classe ne peut pas contenir plusieurs variables avec le même nom
@@ -156,12 +155,12 @@ Les voici :
 Ces contraites peuvent être représenter graphiquement mais sont en générale une infinité de représentation graphique.
 Pour régler ce problème nous auront besoin des graph expression expliqué ci dessous.
 
-\subsubsection{Les graph de programme} : Sont des graph typés et labelés (directes). Ils représentent un programme grâce à des node reliées entre elle par des arrêtes. Ces nodes et arrêtes prennent les valeurs vu ci dessus dans le graph de type agrémentées de leurs nom ou d'autres attributs.
+\subsubsection{Les graphiques de programme} Graph typé et labelé (directes) représentant un programme. Il est composé de node reliées entre elle par des arrêtes. Ces nodes et arrêtes prennent les valeurs vu ci dessus dans le graph de type agrémentées de leurs nom ou d'autres attributs.
 
 Definition : G composé d'un ensemble de node labelée et d'edge labelée est un graph formé de 3-tuple(Vg,Eg,nlabg) ou Vg est un ensemble de nodes, nlabg: est une function de nomage de node et Eg est un ensemble
 d'arrêtes.
 
-Dans un graph de programme les entité, classes , variables, methods et paramètres sont représenté par des nodes dont le label est un pair composée de son nom et son type.
+Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des nodes dont le label est une paire composée de son nom et de son type.
 
 Les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. 
 Ces arrêtes possèdes un label pour permettre de faire la différence entre les arrêtes de même type ayant la même source et la même destination.
@@ -170,7 +169,7 @@ programGraph.img
 
 Ce graph représente le programme transport on voit ici toute la structure du programme.
 
-\subsubsection{Les graph expression} : Sont des graph donc les labels des arrêtes sont des expressions régulières, ce qui permet de générer un ensemble de graph à partir d'une seule représentation en remplacent les expressions régulières par toutes leurs valeurs possibles.
+\subsubsection{Les graph d'expression} : Sont des graph donc les labels des arrêtes sont des expressions régulières, ce qui permet de générer un ensemble de graph à partir d'une seule représentation en remplacent les expressions régulières par toutes leurs valeurs possibles.
 
 graphExpRegu.img
 
@@ -185,22 +184,8 @@ Ces graphiques représentent les différentes contraites non représentable sans
 \item wf4.png
 \end{enumerate}
 
-\subsection{Problèmes restants}
-Comme expliqué plus haut, non allons appliquer des production graphique sur un graph de programme lorsque l'on refactore.
-
-Malheusement certain type de refactoring modifie une partie variable d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique.
-Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme appele controlled graph rewriting.
-
-De plus la representation d'un refactoring devra être représentée dans une forme générique qui doit être remplacée par une autre forme générique.
-Et non pas par des représentation contenant des noms concret de méthoes ou de classes auquel il doit être appliqué.
-
-Un autre problème de la transformation de graph est que parfois certaines arrêtes deviennent orphelines.
-Car elle accedait à une variable qui est maintenant uniquement accessible par un getter ou un setter.
-Ces arrêtes orphlines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe.
-C'est pour cela que l'on emploie un méchanisme "embedding mechanism" qui autorise ces edges orphiles.
-
 \newpage
-\section{Programme example}
+\section{Exemple avec un programme}
 
 \subsection{Vehicules}
 
@@ -261,15 +246,17 @@ Elle consiste à rendre une variable public, privée et à ajouter un accesseur 
 
 Lors d'un refactoring cela consiste à changer la visibility de la variable, créer deux nouvelles methodes et changer tout les accès et les mise à jour par des appels aux deux méthodes crées.
 
-\subsubsection{Example}
 
-before :
+\subsubsection{Code before}
+
 \begin{lstlisting}[frame=single]
 public class Person {
 	public String name;
 }
 \end{lstlisting}
-after :
+
+\subsubsection{Code after}
+
 \begin{lstlisting}[frame=single]
 public class Person {
 	private String name;
@@ -301,13 +288,13 @@ encapsulateVariableConditions.png
 \includegraphics[width=\textwidth]{beforeEncapsulateVariable.png}
 \end{myfig}
 
-En haut de l'image~\ref{beforeEncapsulateVariable} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation. Et en dessous nous avons le graphique du programme.
+Dans le haut de la figure~\ref{beforeEncapsulateVariable} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation. Et en dessous nous avons le graphique du programme.
 
 \begin{myfig}{afterEncapsulateVariable}{After Encapsulate Variable}
 \includegraphics[width=\textwidth]{afterEncapsulateVariable.png}
 \end{myfig}
 
-Ici dans l'image~\ref{afterEncapsulateVariable} nous avons les mêmes éléments au dessus mais la partie inférieur à changer. 
+Ici dans la figure~\ref{afterEncapsulateVariable} nous avons les mêmes éléments au dessus mais la partie inférieur à changer. 
 Elle représente le graphique après l'application de la transformation.
 
 Je n'ai laisser que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité. 
@@ -318,15 +305,13 @@ Normalement cette transformation s'applique à tout les sous graphs correspondan
 
 Cela Consiste à déplacer une méthode présente dans une ou plusieur classes enfant et l'insérer dans la classe parent.
 
-\subsubsection{Example}
-
-before :
+\subsubsection{Code before}
 \begin{lstlisting}[frame=single]
 public class Vehicule {
 	public String name;
 	public Person driver;
 
-        public void accelerating(int amount) { 
+	public void accelerating(int amount) { 
 	}
 
 	public void decelerate(int amount) { 
@@ -338,11 +323,12 @@ public class Car extends Vehicule {
 }
 
 public class ManualCar extends Car {
-	public void changeGear(int speed){ }
+	public void changeGear(int speed){ 
+	}
 }
 \end{lstlisting}
 
-after :
+\subsubsection{Code after}
 \begin{lstlisting}[frame=single]
 public class Vehicule {
 	public String name;
@@ -353,8 +339,8 @@ public class Vehicule {
 	}
 	public void decelerate(int amount) { 
 	}
-
-        public void changeGear(int speed){
+	
+	public void changeGear(int speed){
 	}
 }
 
@@ -383,33 +369,133 @@ WF-4 est préservée car on ne crée ni ne modifie aucune méthode.
 \includegraphics[width=\textwidth]{beforePullUpMethode.png}
 \end{myfig}
 
-En haut de l'image~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation. Et en dessous nous avons le graphique du programme.
+Dans le haut de la figure~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation. Et en dessous nous avons le graphique du programme.
 
 \begin{myfig}{afterPullUpMethod}{After PullUp Methode}
 \includegraphics[width=\textwidth]{afterPullUpMethod.png}
 \end{myfig}
 
-Dans~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation en d'autre termes, après avoir
+Dans la figure~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation en d'autre termes, après avoir
 remonté la méthode de la classe ManualCar à Vehicule. Cette méthode est bien supprimée de la classe ManualCar car il n'existe plus de lien
 vers celle çi.
 
-\section{Préservation du comportement}
+\section{Les productions de graph pour exprimer le refatoring}
 
-Nous avons définit au début que notre but était de prouver que les refactoring n'altérait pas le comportement d'un programme. Pour cela nous allons prouvez que certaines propriétés sont preservée après un refactoring. Et plus particulièrement les propriété de types, accès, mise à jour et appelle de méthode.
+Pour exprimer un refactoring appliqué à un programme nous allons appliquer des productions de graph sur le graph de programme.
 
-Il faut donc prouver que si l'on a une expression de graph avant la transformation, il doit exister la même ou une equivalence après cette transformation.
+Il reste cependant quelques problèmes:
 
-Pour cela nous aurons besoin d'une fonction de tracking appelée tr. Si G derive H utilisant un production P alors tr est une fonctient de Vg (set d nodes de G) dans Vh (set de nodes de H)
+- Certain type de refactoring modifie une partie, variable, d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique. Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme de réecriture de graph controllé.
 
-\subsection{Preservation d'un expression de graph}
-GE, une expression de graph et G et H des graph de programme. La fonction tr: Vg -> Vh correspondance de node. Alors la fonction tr preserve GE si pour chaque occurance OC de GE dans G, tr x OC est une occurence de GE dans H.
+- La representation d'un refactoring devra être sous forme générique et pas spécifique à certains noms de classe ou de methodes du programme sur lequel il est appliqué. Une technique de production de graph avec des paramètres va donc être emloyée.
 
-Par example :
+- Il est possible que certaines arrêtes deviennent orphelines car elle accedait à une variable qui est maintenant uniquement accessible par un getter ou un setter. Ces arrêtes orphlines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. C'est pour cela que l'on emploie un méchanisme "embedding mechanism" qui autorise ces edges orphiles.
 
-Montrer que une variable dans LHS X la fonction encapsulate => le getter , setter et la variable dans RHS
+\subsection{Définition des règles de transformation de graph}
 
-\subsection{Fonction de tracking}
+Pour définir ces règles j'ai préféré utiliser des représentations graphiques.
 
+Quelques notions doivent être définie avant de pouvoir appliquer une production à un graph:
+
+1) G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes reliant des noeuds contenu dans ce sous graph. 
+
+2) Quand on applique un mapping sur les noeuds de G, on applique automatiquement un mapping sur les arrêtes reliant ces noeuds.
+
+3) G et K étant des graphs, un occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
+Voir figure~\ref{sousGraph} 
+
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{edge} = [draw,line width=2pt,-,black]
+\tikzstyle{vertex}=[circle,fill=black!25,minimum size=10pt,inner sep=0pt]
+\begin{myfig}{sousGraph}{Exemple sous graph}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,2)/b}, {(2,2)/c}, {(1,1)/e},
+                            {(0,0)/a}, {(2,0)/d}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {a/b/, c/b/,c/d/,d/a/,
+                                         e/c/, b/e/}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+
+\end{tikzpicture}
+\end{myfig}
+
+
+
+\begin{myfig}{sousGraph}{Exemple sous graph valide}
+\tikzstyle{edge} = [draw,line width=2pt,-,green]
+\tikzstyle{vertex}=[circle,fill=green!25,minimum size=10pt,inner sep=0pt]
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,2)/b}, {(2,2)/c}, {(1,1)/e}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {c/b/,
+                                         e/c/, b/e/}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+\end{tikzpicture}
+\end{myfig}
+
+
+\begin{myfig}{sousGraph}{Exemple sous graph invalide}
+\tikzstyle{edge} = [draw,line width=2pt,-,red]
+\tikzstyle{vertex}=[circle,fill=red!25,minimum size=10pt,inner sep=0pt]
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,2)/b}, {(2,2)/c}, {(1,1)/e}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {c/b/, b/e/}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+\end{tikzpicture}
+\end{myfig}
+
+
+\subsubsection{Definition}
+
+La définition mathématique est donnée à la page 15 de l'article "Formalizin Refactorings with Graph Transofrmations"
+
+
+\subsection{Encapsulate Variable}
+
+
+\begin{myfig}{LHSRHSEncapsulateVariable}{LHS et RHS}
+\includegraphics[width=\textwidth]{LHSRHSEncapsulateVariable.png}
+\end{myfig}
+
+\section{Precondition de refactoring}
+Pour exprimer les différentes conditions nessecaire à un refactoring, il est plus facile d'utiliser des precondition qui définisse une sous graph ne pouvant pas être présent avant d'appliquer le refactoring.
+
+\subsection{Pull Up Method}
+
+\begin{myfig}{NACPullUpMethod}{NAC}
+\includegraphics[width=\textwidth]{NACPullUpMethod.png}
+\end{myfig}
+
+La figure~\ref{NACPullUpMethod}, représente la précondition necessaire (négative) pour pouvoir appliquer le refactoring PullUpMethod.
+Elle spécifie que aucun ancêtre de la classe ne possède cette méthode.
+
+\section{Préservation du comportement du programme}
+
+Notre but est de prouver que le refactoring n'altére pas le comportement d'un programme. Pour cela nous allons prouvez que certaines propriétés sont preservée après un refactoring. Et plus particulièrement les propriété de types, accès, mise à jour et appelle de méthode.
+
+Pour prouver cela il faut que si une expression existe avant un refactoring, il existe une expression correspondante apres le refatoring. 
+
+Par exemple: Chaque définition de méthode qui met à jour une variable dans le graph de départ, doit mettre à jour cette variable dans le graph résultat.
+
+MD ( e|c ) * a -> V -> VD
+
+\subsection{Préservation du comportement : Encapsulate Variable}
+
+On peut observer ici que la mise à jour de la variable dans une méthode est conservée après le refactoring, la seule différence est que l'on appéle une méthode qui met à jour la variable à la place de
+dirrectement mettre à jour la variable. Ce qui a comme résultat que le chemin de la MD jusqu'à la variable devient plus long
+
+
+\section{Conclusion}
 
 
 \end{document}
