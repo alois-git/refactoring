@@ -16,6 +16,8 @@
 \usepackage{multirow}
 \usepackage{xparse}
 \usepackage{tikz}
+\setlength{\parskip}{1em}
+\usetikzlibrary{arrows, decorations.markings}
 
 \newcommand\si[2]{\numprint[#2]{#1}}
 \newcommand\np[1]{\numprint{#1}}
@@ -72,12 +74,14 @@ Sous titre.}
 
 \section{Introduction}
 
-Qu'est ce que le refactoring ? le refactoring permet de changer la structure d'un programme en vue de l'améliorer
+Qu'est ce que le refactoring ? 
+
+Le refactoring permet de changer la structure d'un programme en vue de l'améliorer
 tout en préservant son comportement. 
 
 Le refactoring est généralement appliqué sur des programmes écrit en language orienté objet. Il permet de déplacer certaines fonctionnalités d'une classe à une autre, de renomer des variables à travers tout un programme, ect. Il est utile pour éviter la répétition de code.
 
-Le refactoring peut être éffectué à la main. Le programmeur va analyser le code et identifier des parties de code à modifier. Il va ensuite apporter les modifications necessaires.
+Il peut être éffectué à la main. Le programmeur va analyser le code et identifier des parties de code à modifier. Il va ensuite apporter les modifications necessaires.
 Cette technique est malheureusement assez lente et peu sure, en effet le programmeur peu faire des erreurs et introduire des bugs.
 
 Pour pallier à ces problèmes, des outils de refactoring sont disponibles et permettent d'automatiser les actions comme le renomage d'une variable, le déplacement d'un fonction ect. Tout en garantissant une certaine sécurité.
@@ -89,21 +93,23 @@ Dans le but de pallier à ces manques, cet article va présenter un moyen de rep
 Ainsi nous auront la possibilité de refactorer en étant certain de ne pas altérer les fonctionnalités de notre programme.
 
 \section{Représentation en graph}
-Pour représenter un programme et les règles de refactoring nous aurons besoin de plusieurs type de graph.
+Pour représenter la syntaxe d'un programme orienté objet et les règles de refactoring nous aurons besoin de plusieurs type de graph:
 
-\subsection{Transparency}
-La plupart des outils de refactoring actuels utilisent le abstract syntax tree augmented with extra links pour représenter la structure d'un programme. Pour pouvoir s'integrer au mieux dans ces logiciels, la représentation en graph doit être le plus proche possible de cet représentation.
+\begin{itemize}
+\item Les graphs de type
+\item Les graphs de programme
+\item Les graphs d'expression
+\end{itemize}
 
-\subsection{Conciseness}
-Pour que le model reste compréhensible il doit être le plus petit possible de ce faite, nous n'incluerons dans le graph uniquement les choses utiles aux propriété du refactoring.
+En vue de pouvoir s'integrer au mieux dans les logiciels de refactoring, la représentation en graph doit être le plus proche possible d'un arbre de syntaxe abstrait augmanté de lien.
 
-\subsection{Type}
+Le model doit rester compréhensible, il est donc important qu'il soit le plus petit possible, de ce faite nous incluerons uniquement les choses utiles aux propriété du refactoring dans le graph.
 
+\subsection{Les différents type de graph}
 
 \subsection{Les graph de type}
 
-Specifies les règles que le graph d'un programme doit respecter. Il doit être suffisament générique pour convenir à differents langages orienté object.
-
+Il sert à specifier les règles qu'un graph de programme devra respecter. Il doit être suffisament générique pour convenir à differents langages orienté object.
 
 typedGraph.img 
 
@@ -122,7 +128,6 @@ typedGraph.img
     E &  Expression contenue dans une définition de méthode & EXAMPLE   \\ \hline
 
     \end{tabular}
-
 
 \subsubsection{Les différents type d'arrêtes}
 
@@ -155,7 +160,9 @@ Malheureusement toutes les contraintes necessaires ne sont pas représentables �
 Ces contraites peuvent être représenter graphiquement mais sont en générale une infinité de représentation graphique.
 Pour régler ce problème nous auront besoin des graph expression expliqué ci dessous.
 
-\subsubsection{Les graphiques de programme} Graph typé et labelé (directes) représentant un programme. Il est composé de node reliées entre elle par des arrêtes. Ces nodes et arrêtes prennent les valeurs vu ci dessus dans le graph de type agrémentées de leurs nom ou d'autres attributs.
+\subsubsection{Les graphiques de programme} 
+
+Graph typé et labelé (directes) représentant un programme. Il est composé de node reliées entre elle par des arrêtes. Ces nodes et arrêtes prennent les valeurs vu ci dessus dans le graph de type agrémentées de leurs nom ou d'autres attributs.
 
 Definition : G composé d'un ensemble de node labelée et d'edge labelée est un graph formé de 3-tuple(Vg,Eg,nlabg) ou Vg est un ensemble de nodes, nlabg: est une function de nomage de node et Eg est un ensemble
 d'arrêtes.
@@ -457,11 +464,51 @@ Voir figure~\ref{sousGraph}
 
 \subsubsection{Definition}
 
-La définition mathématique est donnée à la page 15 de l'article "Formalizin Refactorings with Graph Transofrmations"
+La définition mathématique est donnée à la page 15 de l'article "Formalizing Refactorings with Graph Transofrmations".
+
+\begin{myfig}{sousGraph}{EMBin et EMBout}
+\tikzset{>=latex}
+\begin{tikzpicture}
+    \node[empty] at (1,5) {L};
+    \draw (2,4) ellipse (1cm and 0.5cm);
+    \node[empty] at (2,4) {V};
+
+    \draw[->] (5,4) -- +(1,0);
+    \draw[->] (2,3) -- +(0,-1) node[anchor=m] {m};
+
+    \node[empty] at (8,5) {R};
+    \draw (9,4) ellipse (1cm and 0.5cm);
+    \node[empty] at (9,4) {W};
+
+    \draw[->] (9,3) -- +(0,-1) node[anchor=n] {n};
+
+    \node[empty] at (0,1) {G};
+    \draw (2,0) ellipse (2cm and 1cm);
+    \draw (2,0) ellipse (1cm and 0.5cm);
+    \node[empty] at (2,0) {m(v)};
+
+    \draw[->] (5,0) -- +(1,0);
+
+    \node[empty] at (7,1) {H};
+    \draw (9,0) ellipse (2cm and 1cm);
+    \draw (9,0) ellipse (1cm and 0.5cm);
+    \node[empty] at (9,0) {n(w)};
+\end{tikzpicture}
+
+\end{myfig}
+
+Je vais tout de même l'expliquer en français.
+
+G et H sont des graphs, m est une fonction de mapping dans L vers G et n est une fonction de mapping de R vers H.
+
+m(V) est un sous graph de G et n(w) est un sous graph de H.
+
+Vh est égale au graph G moins m(v) + n(w), De facon très imagée on peux voir cela comme si on retirais un jaune d'oeuf et on le remplace pas un autre.
+
+Embin est utilisée pour rediriger les arrêtes qui pointais du reste du graph vers m(v) et Embout pour les arrêtes qui pointais de m(v) vers le reste du graph.
 
 
 \subsection{Encapsulate Variable}
-
 
 \begin{myfig}{LHSRHSEncapsulateVariable}{LHS et RHS}
 \includegraphics[width=\textwidth]{LHSRHSEncapsulateVariable.png}
