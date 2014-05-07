@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10pt]{article}
+\documentclass[a4paper, 12pt]{article}
 
 \usepackage{listings}
 \usepackage{color}
@@ -60,8 +60,7 @@
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
-\title{Formalizing Refactorings with Graph Transformation.\\
-Sous titre.}
+\title{Formalizing Refactorings with Graph Transformation}
 \author{Paulus Alois}
 
 \begin{document}
@@ -92,6 +91,8 @@ Dans le but de pallier à ces manques, cet article va présenter un moyen de rep
 
 Ainsi nous auront la possibilité de refactorer en étant certain de ne pas altérer les fonctionnalités de notre programme.
 
+\newpage 
+
 \section{Représentation en graph}
 Pour représenter la syntaxe d'un programme orienté objet et les règles de refactoring nous aurons besoin de plusieurs type de graph:
 
@@ -107,48 +108,12 @@ Le model doit rester compréhensible, il est donc important qu'il soit le plus p
 
 \subsection{Les différents type de graph}
 
-\subsection{Les graph de type}
+\subsection{Le graph de type}
 
-Il sert à specifier les règles qu'un graph de programme devra respecter. Il doit être suffisament générique pour convenir à differents langages orienté object.
+Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Si un graph de programme ne respecte pas toutes les contraintes, il n'est pas syntaxiquement correcte.
+Il est indispensable d'établir un graph de type pour prouver que le refactoring produit des programmes avec une syntaxe correcte.
 
-typedGraph.img 
-
-\subsubsection{Les differents type de node}
-
-
-  \begin{tabular}{ | l | l | l | p{5cm} |}
-    \hline
-    type & description & examples \\ \hline
-    C & Class & EXAMPLE   \\ \hline
-    M & Signature de méthode & EXAMPLE   \\ \hline
-    MD &  Définition d'une méthode & EXAMPLE   \\ \hline
-    V &  Variable & EXAMPLE   \\ \hline
-    VD &  Définition d'une variable  & EXAMPLE   \\ \hline
-    P & Paramètre & EXAMPLE   \\ \hline
-    E &  Expression contenue dans une définition de méthode & EXAMPLE   \\ \hline
-
-    \end{tabular}
-
-\subsubsection{Les différents type d'arrêtes}
-
-  \begin{tabular}{ | l | l |  l | l |}
-    \hline type & application & description & examples \\ \hline
-    l : & M -> MD  V -> VD &  lookup d'une variable ou d'une méthode à sa définition & EXAMPLE \\ \hline 
-    i : & C -> C &  héritage d'une classe à une autre de méthode & EXAMPLE   \\ \hline
-    m : & VD -> C  MD -> C &   apartenance d'un variable ou d'une méthode à une classe & EXAMPLE   \\ \hline
-    t : & V -> C  M -> C &   type d'une variable ou type de retour & EXAMPLE   \\ \hline
-    p : & MD -> P  P -> C &   définition d'un paramètre ou de son type  & EXAMPLE   \\ \hline
-    e : & E -> M & expression contenue dans une définition de méthode ou dans une expréssion & EXAMPLE   \\ \hline
-    a : & E -> {V|P} & accèss à une variable ou à un paramètre & EXAMPLE   \\ \hline
-    u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre & EXAMPLE   \\ \hline
-   \end{tabular}
-
-On voit içi toutes les relations possible entre les nodes en fonction de leur type.
-On peut aussi observer quelques cardinalité comme le maximum 1 d'une même définition de méthode dans une classe.
-
-Si ces conditions ne sont pas respectées dans un graph, ce graph ne sera pas valide. En d'autre terme, il ne représentera pas un programme doté d'une syntaxe correcte.
-
-Malheureusement toutes les contraintes necessaires ne sont pas représentables à l'aide d'un graph de type.
+Le graph de type à lui tout seul ne suffit pas à représenter toutes les contraintes, il faut également un ensemble de sous graph interdit.
 
 \begin{enumerate}
 \item une classe ne peut pas contenir plusieurs variables avec le même nom
@@ -157,14 +122,52 @@ Malheureusement toutes les contraintes necessaires ne sont pas représentables �
 \item une expression contenue dans une méthode ne peut pas accéder à un paramètre appartenent à une autre méthode.
 \end{enumerate}
 
-Ces contraites peuvent être représenter graphiquement mais sont en générale une infinité de représentation graphique.
-Pour régler ce problème nous auront besoin des graph expression expliqué ci dessous.
+Malheureusement cet ensemble de graph interdit peut être infini, pour régler ce problème nous auront besoin des graphs d'expression expliqué ci dessous.\label{subsec:graphExpression}
 
-\subsubsection{Les graphiques de programme} 
+Dans la figure~\ref{typeGraph} se trouve toutes les relations possible entre les nodes en fonction de leur type.
+On peut aussi observer quelque cardinalité comme le maximum 1 d'une même définition de méthode dans une classe.
+
+\begin{myfig}{typeGraph}{Graph de type}
+\includegraphics[width=\textwidth]{typeGraph.png}
+\end{myfig}
+
+\subsubsection{Les differents type de node}
+
+
+  \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    type & description  \\ \hline
+    C & Class   \\ \hline
+    M & Signature de méthode   \\ \hline
+    MD &  Définition d'une méthode   \\ \hline
+    V &  Variable   \\ \hline
+    VD &  Définition d'une variable \\ \hline
+    P & Paramètre \\ \hline
+    E &  Expression contenue dans une définition de méthode \\ \hline
+
+    \end{tabular}
+
+\subsubsection{Les différents type d'arrêtes}
+
+  \begin{tabular}{ | l | l |  l |}
+    \hline type & application & description  \\ \hline
+    l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition  \\ \hline 
+    i : & C -> C &  héritage d'une classe à une autre de méthode    \\ \hline
+    m : & VD -> C & \\ & MD -> C & apartenance d'un variable ou d'une méthode à une classe    \\ \hline
+    t : & V -> C  & \\ &  M -> C & type d'une variable ou type de retour    \\ \hline
+    p : & MD -> P  & \\ &  P -> C & définition d'un paramètre ou de son type     \\ \hline
+    e : & E -> M & expression contenue dans une définition de méthode ou \\ & &  dans une expréssion    \\ \hline
+    a : & E -> {V|P} & accèss à une variable ou à un paramètre    \\ \hline
+    u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
+   \end{tabular}
+
+
+\subsection{Les graphs de programme} 
 
 Graph typé et labelé (directes) représentant un programme. Il est composé de node reliées entre elle par des arrêtes. Ces nodes et arrêtes prennent les valeurs vu ci dessus dans le graph de type agrémentées de leurs nom ou d'autres attributs.
 
-Definition : G composé d'un ensemble de node labelée et d'edge labelée est un graph formé de 3-tuple(Vg,Eg,nlabg) ou Vg est un ensemble de nodes, nlabg: est une function de nomage de node et Eg est un ensemble
+\subsubsection{Definition}
+G composé d'un ensemble de node labelée et d'edge labelée est un graph formé de 3-tuple(Vg,Eg,nlabg) ou Vg est un ensemble de nodes, nlabg: est une function de nomage de node et Eg est un ensemble
 d'arrêtes.
 
 Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des nodes dont le label est une paire composée de son nom et de son type.
@@ -172,27 +175,28 @@ Dans un graph de programme les entité (classes, variables, méthodes et paramè
 Les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. 
 Ces arrêtes possèdes un label pour permettre de faire la différence entre les arrêtes de même type ayant la même source et la même destination.
 
-programGraph.img
+\begin{myfig}{typedGraph}{Graph du programme Transport}
+\includegraphics[width=\textwidth]{typedGraph.png}
+\end{myfig}
 
-Ce graph représente le programme transport on voit ici toute la structure du programme.
+\subsection{Les graph d'expression} 
 
-\subsubsection{Les graph d'expression} : Sont des graph donc les labels des arrêtes sont des expressions régulières, ce qui permet de générer un ensemble de graph à partir d'une seule représentation en remplacent les expressions régulières par toutes leurs valeurs possibles.
+Dans la section~\ref{subsec:graphExpression} nous avons évoqué les graphs d'expression. Ces graphs dont les labels des arrêtes peuvent être des expressions régulières, permetent de représenter un ensemble de graph à partir d'un seul. Il suffit de remplacer les expressions régulières par leurs valeurs possibles.
 
-graphExpRegu.img
+\begin{myfig}{graphExpression}{Graph d'expression}
+\includegraphics{graphExpression.png}
+\end{myfig}
 
-Ce graphique illustrent les avantages apportés par les éxpression régulières dans les labels des arrêtes.
+A la gauche de la figure~\ref{graphExpression}, se trouve un graph avec une arrêtes dont le label est une expression régulières. A sa droite sont représenté les deux graphs possible issu du premier graph.
 
-Ces graphiques représentent les différentes contraites non représentable sans les graph expression cité plus haut.
-
-\begin{enumerate}
-\item wf1.png
-\item wf2.png
-\item wf3.png
-\item wf4.png
-\end{enumerate}
+L'exemple reste içi assez simple mais vous pouvez imaginer un graph qui peut representer des centaines d'autres graphs.
 
 \newpage
-\section{Exemple avec un programme}
+\section{Programme exemple}
+
+Durant tout l'article, ce programme servira de base aux exemples et aux démonstrations.
+
+C'est un programme simple contenant de l'héritage entre les classes, utile pour PullUpMethod et des attributs utile pour EncapsulateVariable.
 
 \subsection{Vehicules}
 
@@ -238,6 +242,7 @@ public class AutomaticCar {
 \section{Refactoring}
 
 \subsection{Preservation du comportement}
+\label{subsec:preservationDuComportement}
 La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring. Cela consiste, en simplifiant, que le programme effectuera les mêmes actions avant et après le refactoring. Nous nous concentrerons ici sur trois proprieté :
 
 \begin{itemize}
@@ -251,10 +256,18 @@ La conservation du comportement d'un programme est une chose primordiale lors d'
 Encapsuler une variable dans une classe est une opération souvent éffectué par les programmeurs. 
 Elle consiste à rendre une variable public, privée et à ajouter un accesseur public et un setter public pour continuer à pouvoir accéder et à mettre à jour cette variable.
 
-Lors d'un refactoring cela consiste à changer la visibility de la variable, créer deux nouvelles methodes et changer tout les accès et les mise à jour par des appels aux deux méthodes crées.
+Lors d'un refactoring cela consiste à changer la visibilité de la variable et à créer deux nouvelles methodes. Ensuite il faut changer tout les accès ou/et mise à jour de la variable par des appels aux deux méthodes crées.
 
+\subsubsection{Condition}
 
-\subsubsection{Code before}
+- Il faut que les deux nouvelles méthodes crées ne soit pas déjà présente dans la classe ni dans ses ancêtres et/ou descendants.
+
+WF-1 est préserver car on ne crée ni ne bouge aucune variable.
+WF-2 est préserver car la condition stipules qu'ils ne faut pas que des méthodes comportant les même définition que le getter ou le setter soient présente.
+WF-3 est préservée car on crée deux méthodes accédant une variable dans la même classe.
+WF-4 est préservée car le paramètre de la méthodes setter est employée uniquement dans la définition de cette méthode.
+
+\subsubsection{Avant}
 
 \begin{lstlisting}[frame=single]
 public class Person {
@@ -262,7 +275,7 @@ public class Person {
 }
 \end{lstlisting}
 
-\subsubsection{Code after}
+\subsubsection{Après}
 
 \begin{lstlisting}[frame=single]
 public class Person {
@@ -277,17 +290,6 @@ public class Person {
 	}
 }
 \end{lstlisting}
-
-\subsubsection{Condition}
-
-- Il faut que les deux nouvelles méthodes crées ne soit pas déjà présente dans la classe ni dans ses ancêtres et/ou descendants.
-
-WF-1 est préserver car on ne crée ni ne bouge aucune variable.
-WF-2 est préserver car la condition stipules qu'ils ne faut pas que des méthodes comportant les même définition que le getter ou le setter soient présente.
-WF-3 est préservée car on crée deux méthodes accédant une variable dans la même classe.
-WF-4 est préservée car le paramètre de la méthodes setter est employée uniquement dans la définition de cette méthode.
-
-encapsulateVariableConditions.png
 
 \subsubsection{Représentation graphique}
 
@@ -306,13 +308,26 @@ Elle représente le graphique après l'application de la transformation.
 
 Je n'ai laisser que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité. 
 
-Normalement cette transformation s'applique à tout les sous graphs correspondant ce qui ici correspond à toute les variables membre d'une classe.
+Normalement cette transformation s'applique à tout les sous graphs correspondant.
+
+\newpage 
 
 \subsection{Pull Up Method}
 
-Cela Consiste à déplacer une méthode présente dans une ou plusieur classes enfant et l'insérer dans la classe parent.
+Cela consiste à déplacer une méthode présente dans une ou plusieur classes enfant dans la classe parent. 
 
-\subsubsection{Code before}
+\subsubsection{Condition}
+Les conditions sont:
+
+- La classe parent ne peut pas déjà contenir une méthode ayant la même signature
+- Aucune des variables directement accédée ou modifiée par la méthode ne peut être en dehors du scope de la classe parent.
+
+WF-1 est préserver car on ne crée ni ne bougeons aucune variable.
+WF-2 est préserver grâce à la précondition qui stipule qu'il ne peut pas se trouver une méthode avec la même signature dans la classe parent.
+WF-3 est préservée grâce à la précondition qui stipule que la définition de la méthode bougée ne doit pas accéder à des variables en dehors du scope du parent.
+WF-4 est préservée car on ne crée ni ne modifie aucune méthode.
+
+\subsubsection{Avant}
 \begin{lstlisting}[frame=single]
 public class Vehicule {
 	public String name;
@@ -335,7 +350,7 @@ public class ManualCar extends Car {
 }
 \end{lstlisting}
 
-\subsubsection{Code after}
+\subsubsection{Après}
 \begin{lstlisting}[frame=single]
 public class Vehicule {
 	public String name;
@@ -359,16 +374,6 @@ public class ManualCar extends Car {
 
 }
 \end{lstlisting}
-\subsubsection{Condition}
-Les conditions sont:
-
-- La classe parent ne peut pas déjà contenir une méthode ayant le même nom
-- Aucune des variables directement accédée ou modifiée par la méthode ne peut être en dehors du scope de la classe parent.
-
-WF-1 est préserver car on ne crée ni ne bougeons aucune variable.
-WF-2 est préserver grâce à la précondition qui stipule qu'il ne peut pas se trouver une méthode avec la même signature dans la classe parent.
-WF-3 est préservée grâce à la précondition qui stipule que la définition de la méthode bougée ne doit pas accéder à des variables en dehors du scope du parent.
-WF-4 est préservée car on ne crée ni ne modifie aucune méthode.
 
 \subsubsection{Représentation graphique}
 
@@ -376,19 +381,20 @@ WF-4 est préservée car on ne crée ni ne modifie aucune méthode.
 \includegraphics[width=\textwidth]{beforePullUpMethode.png}
 \end{myfig}
 
-Dans le haut de la figure~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation. Et en dessous nous avons le graphique du programme.
+En haut à gauche de la figure~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure d'un sous graph du programme avant sa transformation. 
+En haut à droite de la figure~\ref{beforePullUpMethode} se trouve la RHS qui représente la structure de ce sous graph après la transformation.
+En dessous nous avons le graphique du programme.
 
 \begin{myfig}{afterPullUpMethod}{After PullUp Methode}
 \includegraphics[width=\textwidth]{afterPullUpMethod.png}
 \end{myfig}
 
-Dans la figure~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation en d'autre termes, après avoir
-remonté la méthode de la classe ManualCar à Vehicule. Cette méthode est bien supprimée de la classe ManualCar car il n'existe plus de lien
-vers celle çi.
+Dans la figure~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation en d'autre termes, après avoir remonté la méthode de la classe ManualCar à Vehicule.
+Cette méthode a bien été supprimée de la classe ManualCar car il n'existe plus de lien vers celle çi.
 
-\section{Les productions de graph pour exprimer le refatoring}
+\section{Les productions de graph pour exprimer le refactoring}
 
-Pour exprimer un refactoring appliqué à un programme nous allons appliquer des productions de graph sur le graph de programme.
+Comme vu dans les exemples ci dessous, pour exprimer un refactoring on applique des productions de graph sur le graph de programme.
 
 Il reste cependant quelques problèmes:
 
@@ -422,8 +428,8 @@ Voir figure~\ref{sousGraph}
                             {(0,0)/a}, {(2,0)/d}}
         \node[vertex] (\name) at \pos {$\name$};
     % Connect vertices with edges and draw weights
-    \foreach \source/ \dest /\weight in {a/b/, c/b/,c/d/,d/a/,
-                                         e/c/, b/e/}
+    \foreach \source/ \dest /\weight in {a/b/1, c/b/2,c/d/3,d/a/4,
+                                         e/c/5, b/e/6}
         \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
 
 \end{tikzpicture}
@@ -440,8 +446,8 @@ Voir figure~\ref{sousGraph}
     \foreach \pos/\name in {{(0,2)/b}, {(2,2)/c}, {(1,1)/e}}
         \node[vertex] (\name) at \pos {$\name$};
     % Connect vertices with edges and draw weights
-    \foreach \source/ \dest /\weight in {c/b/,
-                                         e/c/, b/e/}
+    \foreach \source/ \dest /\weight in {c/b/2,
+                                         e/c/5, b/e/6}
         \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
 \end{tikzpicture}
 \end{myfig}
@@ -456,7 +462,7 @@ Voir figure~\ref{sousGraph}
     \foreach \pos/\name in {{(0,2)/b}, {(2,2)/c}, {(1,1)/e}}
         \node[vertex] (\name) at \pos {$\name$};
     % Connect vertices with edges and draw weights
-    \foreach \source/ \dest /\weight in {c/b/, b/e/}
+    \foreach \source/ \dest /\weight in {c/b/2, b/e/6}
         \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
 \end{tikzpicture}
 \end{myfig}
@@ -489,33 +495,57 @@ La définition mathématique est donnée à la page 15 de l'article "Formalizing
 
     \draw[->] (5,0) -- +(1,0);
 
+    \draw (3.5,0) node[anchor=south] (e) {\textbullet};
+    \draw (2.5,0) node[anchor=south] (f) {\textbullet};
+
+    \draw (0.5,0) node[anchor=south] (g) {\textbullet};
+    \draw (1.5,0) node[anchor=south] (h) {\textbullet};
+ 
+   \draw[-latex] (e.west) to[out=90,in=70] (f.east);
+
+   \draw[-latex] (h.west) to[out=70,in=90] (g.east);
+
     \node[empty] at (7,1) {H};
     \draw (9,0) ellipse (2cm and 1cm);
     \draw (9,0) ellipse (1cm and 0.5cm);
     \node[empty] at (9,0) {n(w)};
+
+    \draw (10.5,0) node[anchor=south] (a) {\textbullet};
+    \draw (9.5,0) node[anchor=south] (b) {\textbullet};
+
+    \draw (7.5,0) node[anchor=south] (c) {\textbullet};
+    \draw (8.5,0) node[anchor=south] (d) {\textbullet};
+ 
+   \draw[-latex] (a.west) to[out=90,in=70] (b.east);
+
+   \draw[-latex] (d.west) to[out=70,in=90] (c.east);
+
 \end{tikzpicture}
 
 \end{myfig}
 
-Je vais tout de même l'expliquer en français.
+Je vais tout de même l'expliquer en français à l'aide de la figure~\ref{sousGraph}.
 
-G et H sont des graphs, m est une fonction de mapping dans L vers G et n est une fonction de mapping de R vers H.
+G et H sont des graphs, m est une fonction de mapping de L vers G et n est une fonction de mapping de R vers H.
 
 m(V) est un sous graph de G et n(w) est un sous graph de H.
 
-Vh est égale au graph G moins m(v) + n(w), De facon très imagée on peux voir cela comme si on retirais un jaune d'oeuf et on le remplace pas un autre.
+{$V_H$} est égale au graph G moins m(v) + n(w), De facon très imagée on peux voir ça comme si on retirais un jaune d'oeuf et on le remplacait par un autre.
 
-Embin est utilisée pour rediriger les arrêtes qui pointais du reste du graph vers m(v) et Embout pour les arrêtes qui pointais de m(v) vers le reste du graph.
+Embin est utilisée pour rediriger les arrêtes du reste du graph qui pointais vers des arrêtes contenue dans m(v).
+Embout est utilisée pour rediriger les arrêtes contenue dans m(v) qui pointais vers des arrêtes du reste du graph.
 
 
-\subsection{Encapsulate Variable}
+\subsection{Pull Up Method}
 
-\begin{myfig}{LHSRHSEncapsulateVariable}{LHS et RHS}
-\includegraphics[width=\textwidth]{LHSRHSEncapsulateVariable.png}
+\begin{myfig}{LHSRHSPullUpMethod}{LHS et RHS}
+\includegraphics[width=\textwidth]{LHSRHSPullUpMethod.png}
 \end{myfig}
 
 \section{Precondition de refactoring}
-Pour exprimer les différentes conditions nessecaire à un refactoring, il est plus facile d'utiliser des precondition qui définisse une sous graph ne pouvant pas être présent avant d'appliquer le refactoring.
+Pour exprimer les différentes conditions necessaire à un refactoring, il est plus facile d'utiliser des precondition.
+
+Elle servent à définir un sous graph ou un ensemble de sous graph ne pouvant pas être présent avant d'appliquer le refactoring.
 
 \subsection{Pull Up Method}
 
@@ -523,16 +553,17 @@ Pour exprimer les différentes conditions nessecaire à un refactoring, il est p
 \includegraphics[width=\textwidth]{NACPullUpMethod.png}
 \end{myfig}
 
-La figure~\ref{NACPullUpMethod}, représente la précondition necessaire (négative) pour pouvoir appliquer le refactoring PullUpMethod.
-Elle spécifie que aucun ancêtre de la classe ne possède cette méthode.
+La figure~\ref{NACPullUpMethod}, représente les deux préconditions nécessaire pour pouvoir appliquer le refactoring PullUpMethod.
+Elle spécifie que aucun ancêtre ni descendant de la classe ne possède cette méthode.
 
 \section{Préservation du comportement du programme}
 
-Notre but est de prouver que le refactoring n'altére pas le comportement d'un programme. Pour cela nous allons prouvez que certaines propriétés sont preservée après un refactoring. Et plus particulièrement les propriété de types, accès, mise à jour et appelle de méthode.
+Le but de cette partie est de démontrer que certaines propriétés sont preservée après un refactoring, plus particulièrement les propriété de types, accès à une variable, mise à jour d'un variable et appelle de méthode.
 
-Pour prouver cela il faut que si une expression existe avant un refactoring, il existe une expression correspondante apres le refatoring. 
+Ces types de comportement introduit dans la sous section~\ref{subsec:graphExpression} 
+Pour prouver cela il faut prouver que si une expression existe avant un refactoring, il existe une expression correspondante après. 
 
-Par exemple: Chaque définition de méthode qui met à jour une variable dans le graph de départ, doit mettre à jour cette variable dans le graph résultat.
+Par exemple, chaque définition de méthode qui met à jour une variable dans un graph de départ, doit mettre à jour cette variable dans le graph résultat.
 
 MD ( e|c ) * a -> V -> VD
 
