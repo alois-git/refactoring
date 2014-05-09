@@ -103,21 +103,21 @@ Pour représenter la structure d'un programme orienté objet et les règles de r
 \item Les graphs d'expression
 \end{itemize}
 
-En vue de pouvoir s'integrer au mieux dans les logiciels de refactoring, la représentation en graph doit être le plus proche possible d'un arbre de syntaxe abstrait augmenté de lien.
+En vue de pouvoir s'integrer au mieux dans les logiciels de refactoring, la représentation en graph s'approchera le plus possible d'un arbre de syntaxe abstrait augmenté de lien.
 
-Il est également important que le model reste conci pour facilité sa compréhension, de ce faite nous incluerons uniquement les choses requisent aux propriétés du refactoring.
+Il est également important que le model reste conci pour facilité sa compréhension. De ce faite nous incluerons uniquement les choses requisent pour prouver les propriétés du refactoring.
 
 \subsection{Les différents type de graph}
 
 \subsection{Le graph de type}
 
-Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Si un graph de programme ne respecte pas toutes ces contraintes, il n'est pas syntaxiquement correcte et ne de manière plus basique, ne compilera pas.
+Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Un graph de programme devrat respecter toutes ces contraintes ou bien être condidéré comme un programme syntaxiquement incorrecte. De manière plus concraite, ce programme ne compilera pas.
 
-Il est donc indispensable d'établir un graph de type pour prouver que le refactoring produit des programmes avec une syntaxe correcte.
+Il est donc indispensable d'établir un graph de type pour prouver que le refactoring produit des programmes valide.
 
 Malheureusement, le graph de type ne suffit pas à représenter toutes les contraintes voir figure~\ref{contraintes}, il faut également y joindre un ensemble de sous graph interdit.
 
-De plus cet ensemble de graph interdit peut être infini, par exemple contenir plusieurs variables avec le même nom consiste a interdir tous les graphs avec deux ou plus variable de même nom.
+De plus cet ensemble de graph interdit peut être infini. Par exemple contenir plusieurs variables avec le même nom consiste a interdir tous les graphs avec deux ou plus variable de même nom.
 
 Pour régler ce problème nous auront besoin des graphs d'expression expliqué ci dessous.\label{subsec:graphExpression}
 
@@ -131,12 +131,9 @@ Pour régler ce problème nous auront besoin des graphs d'expression expliqué c
 \end{enumerate}
 \end{myfig}
 
-\begin{myfig}{typeGraph}{Graph de type}
-\includegraphics[width=\textwidth]{typeGraph.png}
-\end{myfig}
-
-La figure~\ref{typeGraph} est un exemple de graph de type, on y trouve toutes les relations possible entre les nodes en fonction de leur type.
-On peut aussi observer quelques cardinalités comme le maximum à un d'une même définition de méthode dans une classe.
+\subsubsection{Définition}
+Un graph de type est un graph labellé contenant un ensemble de noeuds typé et d'arrêtes typée. G étant un graph et TG un graph typé. G est typé par rapport à TG si il existe une projection
+de G dans TG conservant les sources, les targets et les labèles. Pour les labèles on prend en compte uniquement le label.
 
 \subsubsection{Les differents type de node}
 
@@ -155,9 +152,9 @@ On peut aussi observer quelques cardinalités comme le maximum à un d'une même
 \subsubsection{Les différents type d'arrêtes}
   \begin{tabular}{ | l | l |  l |}
     \hline type & application & description  \\ \hline
-    l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition  \\ \hline 
+    l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline 
     i : & C -> C &  héritage d'une classe à une autre de méthode    \\ \hline
-    m : & VD -> C & \\ & MD -> C & apartenance d'un variable ou d'une méthode à une classe    \\ \hline
+    m : & VD -> C & \\ & MD -> C & appartenance d'un variable ou d'une méthode à une classe  \\ \hline
     t : & V -> C  & \\ &  M -> C & type d'une variable ou type de retour    \\ \hline
     p : & MD -> P  & \\ &  P -> C & définition d'un paramètre ou de son type     \\ \hline
     e : & E -> M & expression contenue dans une définition de méthode ou \\ & &  dans une expréssion    \\ \hline
@@ -165,20 +162,34 @@ On peut aussi observer quelques cardinalités comme le maximum à un d'une même
     u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
    \end{tabular}
 
+\begin{myfig}{typeGraph}{Graph de type}
+\includegraphics[width=\textwidth]{typeGraph.png}
+\end{myfig}
+
+La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possible entre les type de noeuds et d'arrêtes.
+Et grâce au tableau ci dessous vous pouvez interpreter ce graphique.
+
+Voici quelques exemples:
+\begin{enumerate}
+Les noeuds C peut ainsi hériter d'un autre noeud C.
+Les noeuds MD contiendra des noeuds E et appartiendra à un noeud C
+Les noeuds V auront comme type un noeud C
+Les noeuds E pourront mettre à jour ou bien accèder à un noeud V
+\end{enumerate}
+
 
 \subsection{Les graphs de programme} 
 
-Graph typé et labelé représentant un programme. Il est composé de noeuds reliés par des arrêtes. Ses noeuds et ses arrêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs.
+Graph typé et labelé représentant le code source un programme. Il est composé de noeuds typés reliés par des arrêtes typées. Ses noeuds et ses arrêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
 
 \subsubsection{Definition}
-G est composé d'un ensemble de noeuds labelées et d'arrêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},nlabg), ou {$V_G$} est un ensemble de noeuds, nlabg est une function de nomage de noeud et {$E_g$} est un ensemble d'arrêtes. Les arrêtes sont représentées par un triple, noeud depart / label / noeud arrivée.
+G est composé d'un ensemble de noeuds labelés et d'arrêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},nlabg), ou {$V_G$} est un ensemble de noeuds, nlabg est une function de nomage de noeud et {$E_g$} est un ensemble d'arrêtes. Les arrêtes sont représentées par un triplet (noeud depart, label, noeud destination).
 
 Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des noeuds dont le label est une paire composée d'un nom et d'un type.
 
-Les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. 
-Ces arrêtes possèdent un label pour faire la différence entre les arrêtes de même type ayant le même noeud source et le même noeud destination.
+Les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. Ces arrêtes possèdent un label pour faire la différence entre les arrêtes de même type ayant le même noeud source et le même noeud destination.
 
-\begin{myfig}{typedGraph}{Graph du programme Transport}
+\begin{myfig}{typedGraph}{Graph de programme}
 \includegraphics[width=\textwidth]{typedGraph.png}
 \end{myfig}
 
@@ -192,13 +203,16 @@ Ces graphs possèdent des arrêtes avec des labels pouvant être des expressions
 \includegraphics{graphExpression.png}
 \end{myfig}
 
-A la gauche de la figure~\ref{graphExpression}, se trouve un graph avec une arrêtes dont le label est une expression régulières. A sa droite sont représenté les deux graphs possible issu du premier graph.
+A gauche de la figure~\ref{graphExpression}, se trouve un graph avec une arrête dont le label est une expression régulières. A droite sont représenté les deux graphs possible issu du premier graph qui montre une expression méttant à jour une variable ou un expression accédant à une variable.
 
 L'exemple reste assez simple mais vous pouvez imaginer un graph qui peut representer des centaines d'autres graphs.
 
 \section{Cas d'étude}
 
-Durant tout l'article, nous étudierons deux refactoring en particulier, PullUpMethod et EncapsulateVariable. Plusieurs exemples seront prit sur base du programme "Transport", écrit en java.
+Durant tout l'article, nous étudierons deux refactoring en particulier. PullUpMethod qui consiste à supprimer une méthode présente dans une ou plusieur classes enfant et à l'insérer dans la classe parent.
+Et EncapsulateVariable qui consiste à imposer l'accès et la mise à jour d'une variable par l'intermédiaire de deux méthodes communémant appelé getter et setter.
+
+Les exemples seront prit sur base du programme "Transport", c'est un programme simple écrit en java permettant ces deux refactorings.
 
 \subsection{Programme Transport}
 
@@ -245,7 +259,12 @@ public class AutomaticCar {
 
 \subsection{Preservation du comportement}
 \label{subsec:preservationDuComportement}
-La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring. Cela consiste, en simplifiant, que le programme effectuera les mêmes actions avant et après le refactoring. Nous nous concentrerons ici sur les trois proprieté suivantes.
+
+La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring. Il n'est pas facile de définir en quoi consiste réellement cette préservation, il est même impossible de la garantir à 100 pourcent. 
+
+Par ailleurs il faudra trouver une définition possible à garantir, garantissant que le programme effectuera les mêmes actions avant et après le refactoring. 
+
+En vue de pouvoir prouver cela, nous nous concentrerons ici sur trois proprieté.
 
 \begin{itemize}
 \item Préservation de l'accès, chaque méthode accédera au moins à toutes les variables qu'elle accédait avant le refactoring
@@ -255,15 +274,15 @@ La conservation du comportement d'un programme est une chose primordiale lors d'
 
 \subsection{Productions de graph pour exprimer le refactoring}
 
-Comme vu dans les exemples ci dessous, pour exprimer un refactoring on applique des productions de graph sur le graph de programme.
+Pour représenter un refactoring appliqué sur le code source d'un programme, on applique des productions de graph sur le graph de programme.
 
 Il reste cependant quelques problèmes:
 
 - Certain type de refactoring modifie une partie, variable, d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique. Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme de réecriture de graph controllé.
 
-- La representation d'un refactoring devra être sous forme générique et pas spécifique à certains noms de classe ou de methodes du programme sur lequel il est appliqué. Une technique de production de graph avec des paramètres va donc être emloyée.
+- La representation d'un refactoring devra être sous forme générique et non spécifique aux noms des classes ou des méthodes contenue dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va donc être emloyée. 
 
-- Il est possible que certaines arrêtes deviennent orphelines car elle accedait à une variable qui est maintenant uniquement accessible par un getter ou un setter. Ces arrêtes orphlines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. C'est pour cela que l'on emploie un méchanisme "embedding mechanism" qui autorise ces edges orphiles.
+- Il est possible que certaines arrêtes deviennent orphelines suite à un refatoring car elle accedait à une variable qui est maintenant uniquement accessible par une méthode (getter ou setter). Ces arrêtes orphelines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. En effet les inclures dans LHS et RHS créerait des ensembles LHS et RHS infinits.Pour pallier à ce problème on emploie un méchanisme "embedding mechanism" qui autorise ces arrêtes oprhelines.
 
 \subsubsection{Règles de transformation de graph}
 
@@ -469,10 +488,9 @@ Dans le haut de la figure~\ref{beforeEncapsulateVariable} se trouve la LHS qui r
 \end{myfig}
 
 Ici dans la figure~\ref{afterEncapsulateVariable} nous avons les mêmes éléments au dessus mais la partie inférieur à changer. 
-Elle représente le graphique après l'application de la transformation. 
+Elle représente le graphique après l'application de la transformation. On peut voir que de nouveaux noeuds et de nouvelles arrêtes ont été créer pour représenter les deux nouvelles méthodes.
 
-Je n'ai laisser que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité. Normalement cette transformation s'applique à tout les sous graphs correspondant.
-
+Je n'ai laisser que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité.
 
 \subsection{Pull Up Method}
 
@@ -554,9 +572,8 @@ En dessous nous avons le graphique du programme.
 \includegraphics[width=\textwidth]{afterPullUpMethod.png}
 \end{myfig}
 
-Dans la figure~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation en d'autre termes, après avoir remonté la méthode de la classe ManualCar à Vehicule.
-Cette méthode a bien été supprimée de la classe ManualCar car il n'existe plus de lien vers celle çi.
-
+Dans la figure~\ref{afterPullUpMethod} la partie du dessous à changé et représente le programme après avoir appliqué la transformation.
+Après avoir remonté la méthode de la classe ManualCar dans la classe Vehicule, on peut observer que le lien de la méthode "changeGear" vers la classe ManualCar n'existe plus. Et qu'un nouveau lien a été créé vers la classe Vehicule.
 
 \section{Préservation du comportement du programme}
 
@@ -576,6 +593,24 @@ dirrectement mettre à jour la variable. Ce qui a comme résultat que le chemin 
 
 
 \section{Conclusion}
+
+Le but de cet article était de prouver que le refactoring n'altérait pas le comportement d'un programme à l'aide de transformation de graph. En effet le code source d'un programme peut être facilement représenté avec un graph, les transformations faites à ce code source lors d'un refactoring peuvent être exprimée avec des transformations de graph et le modèle choisit est suffisant clair pour prouver que le refactoring conserve certaines propriétés du programme.
+
+En outre certains problèmes sont apparut, ce qui a demandé des ajouts et des compromis. 
+
+- Pour les Preconditions, certaines contraintes on été mis de coté. Par exemple pour le refactoring PullUpMethod, on ne contronlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
+
+- Pour la représentation en graph, dans le but de supporté un large éventaille de language nous avons ajouté la possibilité d'attaché des attribus supplémentaires aux noeuds.
+
+- Pour le graph de type, toutes les contraites n'étaient pas représentable à l'aide d'un graph de type, nous avons donc introduit les graph d'expression.
+
+- Pour les transformations de graph, ?????
+
+- Pour la préservation du comportement, ?????
+
+Malgré cela l'approche utilisée reste éfficace pour définir l'effet que chaque refactoring a sur le code source d'un programme. Cependant, il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être employé par un outil de refactoring concrait.
+
+
 
 
 \end{document}
