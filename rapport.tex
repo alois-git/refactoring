@@ -12,10 +12,11 @@
 \usepackage{sistyle}
 \usepackage[autolanguage]{numprint}
 \usepackage{fullpage}
-\usepackage[margin=0.7in]{geometry}
+
 \usepackage{multirow}
 \usepackage{xparse}
 \usepackage{tikz}
+\usepackage{enumitem}
 \setlength{\parskip}{1em}
 \usetikzlibrary{arrows, decorations.markings}
 
@@ -97,7 +98,7 @@ Ainsi nous auront la possibilité de refactorer de manière automatisée sur mul
 \section{Représentation en graph}
 Pour représenter la structure d'un programme orienté objet et les règles de refactoring nous aurons besoin de plusieurs type de graph.
 
-\begin{itemize}
+\begin{itemize}[label=\textbullet]
 \item Les graphs de type
 \item Les graphs de programme
 \item Les graphs d'expression
@@ -209,10 +210,28 @@ L'exemple reste assez simple mais vous pouvez imaginer un graph qui peut represe
 
 \section{Cas d'étude}
 
-Durant tout l'article, nous étudierons deux refactoring en particulier. PullUpMethod qui consiste à supprimer une méthode présente dans une ou plusieur classes enfant et à l'insérer dans la classe parent.
-Et EncapsulateVariable qui consiste à imposer l'accès et la mise à jour d'une variable par l'intermédiaire de deux méthodes communémant appelé getter et setter.
+Durant tout l'article, nous étudierons deux refactoring en particulier. 
+
+\begin{enumerate}
+\item PullUpMethod qui consiste à supprimer une méthode présente dans une ou plusieur classes enfant et à l'insérer dans la classe parent.
+\item EncapsulateVariable qui consiste à imposer l'accès et la mise à jour d'une variable par l'intermédiaire de deux méthodes communémant appelé getter et setter.
+\end{enumerate}
 
 Les exemples seront prit sur base du programme "Transport", c'est un programme simple écrit en java permettant ces deux refactorings.
+
+Certains exemples seront donné sous forme de graph. Dans la plupart des cas, ces graphs ont été réalisé grâce à l'outil AGG. 
+
+Les caractèristique de AGG sont:
+
+\begin{itemize}[label=\textbullet]
+\item Représenter des structures de donnée sous forme de graph qui peuvent être typé par un graph de type.
+\item Spécifier des règles sur un graph
+\item Spécifier des "NAC" pour exprimé la non-existance de certaines structures lors de transformation de graph
+\item Application de transformation de graph
+\item Application séquentiel de transformation de graph
+\end{itemize}
+
+AGG est assez facile à prendre en main, surtout gràce aux exemples fournis. Il m'a aidé à comprendre certains concepts comme les NACs et m'a été très utile durant toute la rédaction de mon rapport.
 
 \subsection{Programme Transport}
 
@@ -260,13 +279,13 @@ public class AutomaticCar {
 \subsection{Preservation du comportement}
 \label{subsec:preservationDuComportement}
 
-La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring. Il n'est pas facile de définir en quoi consiste réellement cette préservation, il est même impossible de la garantir à 100 pourcent. 
+La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring. malheureusement , il n'est pas facile de définir en quoi consiste réellement cette préservation, il est même impossible de la garantir à 100 pourcent. 
 
-Par ailleurs il faudra trouver une définition possible à garantir, garantissant que le programme effectuera les mêmes actions avant et après le refactoring. 
+Par ailleurs il sera nécessaire de trouver une définition garantissant que le programme effectuera les mêmes actions avant et après le refactoring. 
 
-En vue de pouvoir prouver cela, nous nous concentrerons ici sur trois proprieté.
+Dans cette optique, nous nous concentrerons ici sur trois proprieté.
 
-\begin{itemize}
+\begin{itemize}[label=\textbullet]
 \item Préservation de l'accès, chaque méthode accédera au moins à toutes les variables qu'elle accédait avant le refactoring
 \item Préservation de la mise à jour, chaque methode mettera à jour au moins toutes les variables mise à jour avant le refactoring
 \item Préservation de l'appele, chaque methode appelera au moins toutes les méthodes appelées avant le refactoring
@@ -278,24 +297,25 @@ Pour représenter un refactoring appliqué sur le code source d'un programme, on
 
 Il reste cependant quelques problèmes:
 
-- Certain type de refactoring modifie une partie, variable, d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique. Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme de réecriture de graph controllé.
+\begin{enumerate}
+\item Certain type de refactoring modifie une partie, variable, d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique. Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme de réecriture de graph controllé.
 
-- La representation d'un refactoring devra être sous forme générique et non spécifique aux noms des classes ou des méthodes contenue dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va donc être emloyée. 
+\item La representation d'un refactoring devra être sous forme générique et non spécifique aux noms des classes ou des méthodes contenue dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va donc être emloyée. 
 
-- Il est possible que certaines arrêtes deviennent orphelines suite à un refatoring car elle accedait à une variable qui est maintenant uniquement accessible par une méthode (getter ou setter). Ces arrêtes orphelines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. En effet les inclures dans LHS et RHS créerait des ensembles LHS et RHS infinits.Pour pallier à ce problème on emploie un méchanisme "embedding mechanism" qui autorise ces arrêtes oprhelines.
+\item Il est possible que certaines arrêtes deviennent orphelines suite à un refatoring car elle accedait à une variable qui est maintenant uniquement accessible par une méthode (getter ou setter). Ces arrêtes orphelines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. En effet les inclures dans LHS et RHS créerait des ensembles LHS et RHS infinits.Pour pallier à ce problème on emploie un méchanisme "embedding mechanism" qui autorise ces arrêtes oprhelines.
+\end{enumerate}
 
 \subsubsection{Règles de transformation de graph}
 
-Pour définir ces règles j'ai préféré utiliser des représentations graphiques.
-
 Quelques notions doivent être définie avant de pouvoir appliquer une production à un graph:
 
-1) G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes reliant des noeuds contenu dans ce sous graph. 
+\begin{enumerate}
+\item G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes reliant des noeuds contenu dans ce sous graph. 
 
-2) Quand on applique un mapping sur les noeuds de G, on applique automatiquement un mapping sur les arrêtes reliant ces noeuds.
+\item Quand on applique un mapapge sur les noeuds de G, on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
 
-3) G et K étant des graphs, un occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
-Voir figure~\ref{sousGraph} 
+\item  G et K étant des graphs, un occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
+\end{enumerate}
 
 \tikzstyle{weight} = [font=\small]
 \tikzstyle{edge} = [draw,line width=2pt,-,black]
@@ -344,6 +364,17 @@ Voir figure~\ref{sousGraph}
 \subsubsection{Definition}
 
 La définition mathématique est donnée à la page 15 de l'article "Formalizing Refactorings with Graph Transofrmations".
+
+Je vais tout de même l'expliquer en français à l'aide de la figure~\ref{sousGraph}.
+
+G et H sont des graphs, m est une fonction de mappage de L vers G et n est une fonction de mappage de R vers H.
+
+m(V) est un sous graph de G et n(w) est un sous graph de H.
+
+{$V_H$} est égale au graph G moins m(v) + n(w), De facon très imagé on peut voir ça comme si on retirais un jaune d'oeuf et on le remplacait par un autre.
+
+Embin est utilisée pour rediriger les arrêtes du reste du graph qui pointais vers des arrêtes contenue dans m(v).
+Embout est utilisée pour rediriger les arrêtes contenue dans m(v) qui pointais vers des arrêtes du reste du graph.
 
 \begin{myfig}{sousGraph}{EMBin et EMBout}
 \tikzset{>=latex}
@@ -397,34 +428,21 @@ La définition mathématique est donnée à la page 15 de l'article "Formalizing
 
 \end{myfig}
 
-Je vais tout de même l'expliquer en français à l'aide de la figure~\ref{sousGraph}.
-
-G et H sont des graphs, m est une fonction de mapping de L vers G et n est une fonction de mapping de R vers H.
-
-m(V) est un sous graph de G et n(w) est un sous graph de H.
-
-{$V_H$} est égale au graph G moins m(v) + n(w), De facon très imagée on peux voir ça comme si on retirais un jaune d'oeuf et on le remplacait par un autre.
-
-Embin est utilisée pour rediriger les arrêtes du reste du graph qui pointais vers des arrêtes contenue dans m(v).
-Embout est utilisée pour rediriger les arrêtes contenue dans m(v) qui pointais vers des arrêtes du reste du graph.
-
 
 \begin{myfig}{LHSRHSPullUpMethod}{LHS et RHS}
 \includegraphics[width=\textwidth]{LHSRHSPullUpMethod.png}
 \end{myfig}
 
-\subsection{Precondition de refactoring}
-Pour exprimer les différentes conditions necessaire à un refactoring, il est plus facile d'utiliser des precondition.
-
-Elle servent à définir un sous graph ou un ensemble de sous graph ne pouvant pas être présent avant d'appliquer le refactoring.
-
+\subsection{Précondition de refactoring}
+Les préconditions servent à définir un sous graph ou un ensemble de sous graph ne pouvant pas être présent avant d'appliquer le refactoring. Nous pourrions également employé des postconditions pour interdire
+certains sous graphs dans le graph résultat mais les préconditions sont plus adaptée car on évite d'appliquer des productions sur des graphs et ensuite seulement detecter une erreur.
 
 \begin{myfig}{NACPullUpMethod}{NAC}
 \includegraphics[width=\textwidth]{NACPullUpMethod.png}
 \end{myfig}
 
 La figure~\ref{NACPullUpMethod}, représente les deux préconditions nécessaire pour pouvoir appliquer le refactoring PullUpMethod.
-Elle spécifie que aucun ancêtre ni descendant de la classe ne possède cette méthode.
+Elle spécifie que aucun ancêtres ni descendants de la classe ne peut posséder cette méthode avant le refactoring.
 
 
 \section{Application sur le programme transport}
@@ -436,13 +454,15 @@ Elle consiste à rendre une variable public, privée et à ajouter un accesseur 
 
 Lors d'un refactoring cela consiste à changer la visibilité de la variable et à créer deux nouvelles methodes. Ensuite il faut changer tout les accès ou/et mise à jour de la variable par des appels aux deux méthodes crées.
 
-\subsubsection{Condition}
-Les conditions sont:
-\begin{itemize}
+\subsubsection{Conditions}
+
+\begin{itemize}[label=\textbullet]
 \item Les deux nouvelles méthodes crées ne soit pas présente dans la classe
 \item Les deux nouvelles méthodes crées ne soit pas présente dans ses ancêtres 
 \item Les deux nouvelles méthodes crées ne soit pas présente dans ses descendants.
 \end{itemize}
+
+\subsubsection{Contraintes}
 
 \begin{enumerate}
 \item est préservée car on ne crée ni ne bougeons aucune variable.
@@ -496,12 +516,14 @@ Je n'ai laisser que la transformation du sous graph lié à la variable "driver"
 
 Cela consiste à déplacer une méthode présente dans une ou plusieur classes enfant dans la classe parent. 
 
-\subsubsection{Condition}
-Les conditions sont:
-\begin{itemize}
+\subsubsection{Conditions}
+
+\begin{itemize}[label=\textbullet]
 \item La classe parent ne peut pas déjà contenir une méthode ayant la même signature
 \item Aucune des variables directement accédée ou modifiée par la méthode ne peut être en dehors du scope de la classe parent.
 \end{itemize}
+
+\subsubsection{Contraintes}
 
 \begin{enumerate}
 \item est préservée car on ne crée ni ne bougeons aucune variable.
@@ -577,19 +599,37 @@ Après avoir remonté la méthode de la classe ManualCar dans la classe Vehicule
 
 \section{Préservation du comportement du programme}
 
-Le but de cette partie est de démontrer que certaines propriétés sont preservée après un refactoring, plus particulièrement les propriété de types, accès à une variable, mise à jour d'un variable et appelle de méthode.
+Nous avons jusqu'ici définit des mécanismes permettent de refactorer un programme gràce aux graphs. Mais nous n'avons pas encore prouvé que ce programme conservait sont comportement à la suite de ces transformations.
 
-Ces types de comportement introduit dans la sous section~\ref{subsec:graphExpression} 
-Pour prouver cela il faut prouver que si une expression existe avant un refactoring, il existe une expression correspondante après. 
+Le but de cette partie est de démontrer que certaines propriétés du programme sont preservée après un refactoring:
+\begin{itemize}[label=\textbullet]
+\item l'accès à une variable
+\item la mise à jour d'une variable
+\item l'appelle d'une méthode
+\end{itemize}
 
-Par exemple, chaque définition de méthode qui met à jour une variable dans un graph de départ, doit mettre à jour cette variable dans le graph résultat.
+Pour cela nous avons besoin d'une fonction de tracking, tr.
 
-MD ( e|c ) * a -> V -> VD
+\subsection{Définition, Préservation d'une expression de graph}
+GE étant une expression de graph et G, H étant des graph de programme. La fonction tr: {$V_G$} \vec {$V_H$} est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction "tr \circ oc" est une occurence de GE dans H.
+
+Pour chaque production de graph une fonction tr existe et mappe les noeuds de LHS dans ceux de RHS.
+
+\subsection{Définition, Fonction de tracking}
+
+\begin{myfig}{preservation}{Préservation}
+MD  \mathrm{( e|c ) * u} V \mathrm{t} VD
+\end{myfig}
+
+Le graph d'expression~\ref{preservation} permet de définir que chaque définition de méthode qui met à jour une variable dans un graph de départ, doit mettre à jour cette variable dans le graph résultat.
+Toutefois, cette variable peut être mis à jour par un appelle à une méthode à la place d'une mise à jour directe.
+
+
 
 \subsection{Préservation du comportement : Encapsulate Variable}
 
 On peut observer ici que la mise à jour de la variable dans une méthode est conservée après le refactoring, la seule différence est que l'on appéle une méthode qui met à jour la variable à la place de
-dirrectement mettre à jour la variable. Ce qui a comme résultat que le chemin de la MD jusqu'à la variable devient plus long
+directement mettre à jour la variable. Ce qui a comme résultat que le chemin de la MD jusqu'à la variable devient plus long
 
 
 \section{Conclusion}
@@ -608,7 +648,7 @@ En outre certains problèmes sont apparut, ce qui a demandé des ajouts et des c
 
 - Pour la préservation du comportement, ?????
 
-Malgré cela l'approche utilisée reste éfficace pour définir l'effet que chaque refactoring a sur le code source d'un programme. Cependant, il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être employé par un outil de refactoring concrait.
+Malgré ces observations, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme. Cependant, il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être employé par un outil de refactoring concret.
 
 
 
