@@ -113,15 +113,13 @@ Il est également important que le model reste conci pour facilité sa compréhe
 
 \subsection{Le graph de type}
 
-Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Un graph de programme devrat respecter toutes ces contraintes ou bien être condidéré comme un programme syntaxiquement incorrecte. De manière plus concraite, ce programme ne compilera pas.
+Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Un graph de programme devra respecter toutes ces contraintes ou bien être condidéré comme un programme syntaxiquement incorrecte. De ce faite il servira à prouver que le refactoring produit des programmes valide.
 
-Il est donc indispensable d'établir un graph de type pour prouver que le refactoring produit des programmes valide.
+Malheureusement, le graph de type ne suffit pas à représenter toutes les contraintes nessecaire pour garantire la structure d'un programme (voir figure~\ref{contraintes}), il faut également y joindre un ensemble de sous graph interdit.
 
-Malheureusement, le graph de type ne suffit pas à représenter toutes les contraintes voir figure~\ref{contraintes}, il faut également y joindre un ensemble de sous graph interdit.
+En outre cet ensemble de graph interdit peut être infini, par exemple l'interdiction dans un programme de contenir plusieurs variables avec le même nom dans une même classe, consiste a interdir tous les graphs avec deux ou plus variable de même nom.
 
-De plus cet ensemble de graph interdit peut être infini. Par exemple contenir plusieurs variables avec le même nom consiste a interdir tous les graphs avec deux ou plus variable de même nom.
-
-Pour régler ce problème nous auront besoin des graphs d'expression expliqué ci dessous.\label{subsec:graphExpression}
+Pour régler ce problème nous auront besoin des graphs d'expressions expliqué ci dessous.\label{subsec:graphExpression}
 
 
 \begin{myfig}{contraintes}{Exemple de contrainte non représentable}
@@ -134,15 +132,15 @@ Pour régler ce problème nous auront besoin des graphs d'expression expliqué c
 \end{myfig}
 
 \subsubsection{Définition}
-Un graph de type est un graph labellé contenant un ensemble de noeuds typé et d'arrêtes typée. G étant un graph et TG un graph typé. G est typé par rapport à TG si il existe une projection
-de G dans TG conservant les sources, les targets et les labèles. Pour les labèles on prend en compte uniquement le label.
+Un graph de type est un graph labellé contenant un ensemble de noeuds typés et d'arrêtes typées. \(G\) étant un graph et \(TG\) un graph typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
+de \(G\) dans \(TG\) conservant les arrêtes sources, les arrêtes destination et les labels. Pour les labels on prend en compte uniquement le nom.
 
 \subsubsection{Les differents type de node}
 
   \begin{tabular}{ | l | l | l | p{5cm} |}
     \hline
-    type & description  \\ \hline
-    C & Class   \\ \hline
+    Type & Description  \\ \hline
+    C & Classe   \\ \hline
     M & Signature de méthode   \\ \hline
     MD &  Définition d'une méthode   \\ \hline
     V &  Variable   \\ \hline
@@ -155,12 +153,12 @@ de G dans TG conservant les sources, les targets et les labèles. Pour les labè
   \begin{tabular}{ | l | l |  l |}
     \hline type & application & description  \\ \hline
     l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline 
-    i : & C -> C &  héritage d'une classe à une autre de méthode    \\ \hline
-    m : & VD -> C & \\ & MD -> C & appartenance d'un variable ou d'une méthode à une classe  \\ \hline
-    t : & V -> C  & \\ &  M -> C & type d'une variable ou type de retour    \\ \hline
+    i : & C -> C &  héritage d'une classe à une autre  \\ \hline
+    m : & VD -> C & \\ & MD -> C & appartenance d'une variable ou d'une méthode à une classe  \\ \hline
+    t : & V -> C  & \\ &  M -> C & type d'une variable ou type de retour d'un méthode   \\ \hline
     p : & MD -> P  & \\ &  P -> C & définition d'un paramètre ou de son type     \\ \hline
-    e : & E -> M & expression contenue dans une définition de méthode ou \\ & &  dans une expréssion    \\ \hline
-    a : & E -> {V|P} & accèss à une variable ou à un paramètre    \\ \hline
+    e : & E -> M & expression contenue dans une définition de méthode ou \\ & &  dans une autre expréssion    \\ \hline
+    a : & E -> {V|P} & accès à une variable ou à un paramètre    \\ \hline
     u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
    \end{tabular}
 
@@ -168,28 +166,27 @@ de G dans TG conservant les sources, les targets et les labèles. Pour les labè
 \includegraphics[width=\textwidth]{typeGraph.png}
 \end{myfig}
 
-La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possible entre les type de noeuds et d'arrêtes.
-Et grâce au tableau ci dessous vous pouvez interpreter ce graphique.
+La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possibles entre les noeuds typés et les arrêtes typées.
 
 Voici quelques exemples:
-\begin{enumerate}
-Les noeuds C peut ainsi hériter d'un autre noeud C.
-Les noeuds MD contiendra des noeuds E et appartiendra à un noeud C
-Les noeuds V auront comme type un noeud C
-Les noeuds E pourront mettre à jour ou bien accèder à un noeud V
-\end{enumerate}
+\begin{itemize}[label=\textbullet]
+\item Un noeud de type C peut hériter d'un autre noeud de type C.
+\item Un noeud de type MD contiendra des noeuds de type E et appartiendra à un noeud de type C
+\item Un noeud de type V aura comme type un noeud de type C
+\item Un noeud de type E pourra mettre à jour ou bien accèder à un noeud de type V
+\end{itemize}
 
 
 \subsection{Les graphs de programme} 
 
-Graph typé et labelé représentant le code source un programme. Il est composé de noeuds typés reliés par des arrêtes typées. Ses noeuds et ses arrêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
+Un graph de programme est un graph typé et labelé représentant la structure du code source d'un programme. Il est composé de noeuds typés reliés par des arrêtes typées. Ses noeuds et ses arrêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
 
 \subsubsection{Definition}
-G est composé d'un ensemble de noeuds labelés et d'arrêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},nlabg), ou {$V_G$} est un ensemble de noeuds, nlabg est une function de nomage de noeud et {$E_g$} est un ensemble d'arrêtes. Les arrêtes sont représentées par un triplet (noeud depart, label, noeud destination).
+\(G \) est composé d'un ensemble de noeuds labelés et d'arrêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},\(nlabg \)), ou {$V_G$} est un ensemble de noeuds, \(nlabg \) est une function de nomage de noeud et {$E_G$} est un ensemble d'arrêtes. Les arrêtes sont représentées par un triplet (noeud depart, label, noeud destination).
 
-Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des noeuds dont le label est une paire composée d'un nom et d'un type.
+Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des noeuds dont le label est une paire composée d'un nom et d'un type. Et les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. 
 
-Les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes. Ces arrêtes possèdent un label pour faire la différence entre les arrêtes de même type ayant le même noeud source et le même noeud destination.
+Ces arrêtes possèdent un label pour faire la différence entre les arrêtes de même type ayant le même noeud source et le même noeud destination.
 
 \begin{myfig}{typedGraph}{Graph de programme}
 \includegraphics[width=\textwidth]{typedGraph.png}
@@ -199,7 +196,9 @@ Les relations entre ces différentes entités (héritage, appelle de méthodes, 
 
 Dans la section~\ref{subsec:graphExpression} nous avons évoqué les graphs d'expression en vue de représenter des contraintes supplémentaires. 
 
-Ces graphs possèdent des arrêtes avec des labels pouvant être des expressions régulières. Ce qui permet de représenter un ensemble de graph à partir d'un seul, Il suffit de remplacer les expressions régulières par leurs valeurs et de créer un graph pour chacune de celle çi. Voici un exemple figure~\ref{graphExpression}
+Ces graphs possèdent des arrêtes dont les labels peuvent être des expressions régulières, ceci permet de représenter un ensemble de graph à partir d'un seul.
+
+Il suffit de remplacer les expressions régulières par leurs valeurs et de créer un graph pour chacune de celle çi. Exemple figure~\ref{graphExpression}
 
 \begin{myfig}{graphExpression}{Graph d'expression}
 \includegraphics{graphExpression.png}
@@ -288,8 +287,8 @@ Dans cette optique, nous nous concentrerons ici sur trois proprieté.
 
 \begin{itemize}[label=\textbullet]
 \item Préservation de l'accès, chaque méthode accédera au moins à toutes les variables qu'elle accédait avant le refactoring
-\item Préservation de la mise à jour, chaque methode mettera à jour au moins toutes les variables mise à jour avant le refactoring
-\item Préservation de l'appele, chaque methode appelera au moins toutes les méthodes appelées avant le refactoring
+\item Préservation de la mise à jour, chaque méthode mettera à jour au moins toutes les variables mise à jour avant le refactoring
+\item Préservation de l'appele, chaque méthode appelera au moins toutes les méthodes appelées avant le refactoring
 \end{itemize}
 
 \subsection{Productions de graph pour exprimer le refactoring}
@@ -301,7 +300,7 @@ Il reste cependant quelques problèmes:
 \begin{enumerate}
 \item Certain type de refactoring modifie une partie, variable, d'un programme ce qui les rend impossible à représenter grâce à une simple production graphique. Il faut donc appliquer plusieurs productions l'une après l'autre dans un ordre spécifique, pour cela nous auront besoin d'un mecanisme de réecriture de graph controllé.
 
-\item La representation d'un refactoring devra être sous forme générique et non spécifique aux noms des classes ou des méthodes contenue dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va donc être emloyée. 
+\item La representation d'un refactoring devra être représenté sous forme générique et non spécifique aux noms des classes/méthodes contenues dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va être emloyée. 
 
 \item Il est possible que certaines arrêtes ne pointent vers aucuns noeuds suite a l'application d'un refatoring. Par exemple, elles accedaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter). Ces arrêtes ne sont normalement pas autorisé mais les éviter serait beaucoup trop complexe. En effet les inclures dans les représentations de LHS et RHS créerait des ensembles LHS et RHS infinits. Pour pallier à ce problème on emploie un méchanisme appellé "embedding mechanism" qui autorise ces arrêtes oprhelines et qui présisera comment les rediriger.
 \end{enumerate}
@@ -311,11 +310,11 @@ Il reste cependant quelques problèmes:
 Quelques notions doivent être définies avant de pouvoir appliquer une production à un graph:
 
 \begin{enumerate}
-\item G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes relient les noeuds contenu dans ce sous graph. 
+\item \(G\) étant un graph, un sous graph de \(G\) contient un ensemble de noeud de \(G\) et uniquement les arrêtes reliant les noeuds contenu dans ce sous graph. 
 
-\item Lorsque l'on applique un mappage sur les noeuds de G, on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
+\item Lorsque l'on applique un mappage sur les noeuds de \(G\), on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
 
-\item G et K étant des graphs, une occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
+\item \(G\) et \(K\) étant des graphs, une occurence de \(K\) dans \(G\) est très restrictive, c'est à dire que toutes les arrêtes entre les noeuds correspondant doivent exister. 
 \end{enumerate}
 
 \tikzstyle{weight} = [font=\small]
@@ -640,6 +639,7 @@ Cette définition mathématique définit :
 
 \subsubsection{Production et table}
 
+\begin{myfig}{embedding}{méchanisme "embedding"}
 \begin{center}
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
   thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
@@ -711,14 +711,23 @@ Cette définition mathématique définit :
     P2 : & (\(a,1) {\rightarrow} (c,3)\) &  (\(m,0) {\rightarrow} (\(m,0),(m,4),(m,5)\)\)    \\ \hline 
          & (\(u,1) {\rightarrow} (c,2)\) &  (\(t,1) {\rightarrow} (t,1)\)  \\ \hline 
    \end{tabular}
+\end{myfig}
+
+Sur la firgure~\ref{embedding} on peut observer différentes chose grâce aux graphs mais égalemment à la table :
+
+\begin{itemize}[label=\textbullet]
+\item Les noeuds ayant les mêmes numéros sont des noeuds conservés entre les productions.
+\item Le type de la variable reste inchangé
+\item Le type de retour du getter est identique à celui de la variable
+\item Le type du paramètre du setter est identique à celui de la variable
+\item Les arrêtes de types \(a\) ou \(u\) sont changées en arrêtes de types \(c\) pointant vers le getter et le setter.
+\item Les nouvelles définitions de méthodes pointe vers la même classe que la définition de variable
+\end{itemize}
 
 En vue de prouver que notre approche est correcte, prenons l'exemple de la préservation de l'accès à une variable lors du refactoring Encapsulate Variable.
 Dans la figure 11 il faut prouver que P1 et P2 préserve le graph d'expression  \(GE = MD \underset{( e|c ) * a}{\rightarrow} V \underset{t}{\rightarrow}  VD\)
 
 Il suffit de prouver que  les propriétés \(GE1 = MD \underset{( e|c ) * a}{\rightarrow} V \) et  \(GE2 = V \underset{t}{\rightarrow}  VD\) sont conservé. 
-
-On peut observer ici que la mise à jour de la variable dans une méthode est conservée après le refactoring, la seule différence est que l'on appéle une méthode qui met à jour la variable à la place de
-directement mettre à jour la variable. Ce qui a comme résultat que le chemin de la MD jusqu'à la variable devient plus long
 
 
 \section{Conclusion}
