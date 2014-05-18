@@ -17,6 +17,7 @@
 \usepackage{xparse}
 \usepackage{tikz}
 \usepackage{enumitem}
+\usepackage{amsmath}
 \setlength{\parskip}{1em}
 \usetikzlibrary{arrows, decorations.markings}
 
@@ -302,19 +303,19 @@ Il reste cependant quelques problèmes:
 
 \item La representation d'un refactoring devra être sous forme générique et non spécifique aux noms des classes ou des méthodes contenue dans le programme sur lequel il est appliqué. Pour cela une technique de production de graph avec paramètre va donc être emloyée. 
 
-\item Il est possible que certaines arrêtes deviennent orphelines suite à un refatoring car elle accedait à une variable qui est maintenant uniquement accessible par une méthode (getter ou setter). Ces arrêtes orphelines ne sont normalement pas autorisé dans un graph, mais les éviter serait beaucoup trop complexe. En effet les inclures dans LHS et RHS créerait des ensembles LHS et RHS infinits.Pour pallier à ce problème on emploie un méchanisme "embedding mechanism" qui autorise ces arrêtes oprhelines.
+\item Il est possible que certaines arrêtes ne pointent vers aucuns noeuds suite a l'application d'un refatoring. Par exemple, elles accedaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter). Ces arrêtes ne sont normalement pas autorisé mais les éviter serait beaucoup trop complexe. En effet les inclures dans les représentations de LHS et RHS créerait des ensembles LHS et RHS infinits. Pour pallier à ce problème on emploie un méchanisme appellé "embedding mechanism" qui autorise ces arrêtes oprhelines et qui présisera comment les rediriger.
 \end{enumerate}
 
 \subsubsection{Règles de transformation de graph}
 
-Quelques notions doivent être définie avant de pouvoir appliquer une production à un graph:
+Quelques notions doivent être définies avant de pouvoir appliquer une production à un graph:
 
 \begin{enumerate}
-\item G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes reliant des noeuds contenu dans ce sous graph. 
+\item G étant un graph, un sous graph de G contient un ensemble de noeud de G et uniquement les arrêtes relient les noeuds contenu dans ce sous graph. 
 
-\item Quand on applique un mapapge sur les noeuds de G, on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
+\item Lorsque l'on applique un mappage sur les noeuds de G, on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
 
-\item  G et K étant des graphs, un occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
+\item G et K étant des graphs, une occurence de K dans G est très restrictive c'est à dire que que toutes les arrêtes entre les noeuds correspondant doivent exister. 
 \end{enumerate}
 
 \tikzstyle{weight} = [font=\small]
@@ -367,16 +368,17 @@ La définition mathématique est donnée à la page 15 de l'article "Formalizing
 
 Je vais tout de même l'expliquer en français à l'aide de la figure~\ref{sousGraph}.
 
-G et H sont des graphs, m est une fonction de mappage de L vers G et n est une fonction de mappage de R vers H.
+\(G\) et \(H\)  sont des graphs, \(m\) est une fonction de mappage de \(L\) vers \(G\) et \(n\) est une fonction de mappage de \(R\)  vers \(H\) .
 
-m(V) est un sous graph de G et n(w) est un sous graph de H.
+\(m(v)\) est un sous graph de \(G\) et \(n(w)\) est un sous graph de H.
 
-{$V_H$} est égale au graph G moins m(v) + n(w), De facon très imagé on peut voir ça comme si on retirais un jaune d'oeuf et on le remplacait par un autre.
+{$V_H$} est égale au graph \(G - m(v) + n(w)\), De facon très imagé on peut voir cela comme si on retirais un jaune d'oeuf et on le remplacait par un autre.
 
-Embin est utilisée pour rediriger les arrêtes du reste du graph qui pointais vers des arrêtes contenue dans m(v).
-Embout est utilisée pour rediriger les arrêtes contenue dans m(v) qui pointais vers des arrêtes du reste du graph.
+$\underset{in}{Emb}$ est utilisée pour rediriger les arrêtes du reste du graph qui pointais vers des arrêtes contenue dans m(v).
 
-\begin{myfig}{sousGraph}{EMBin et EMBout}
+$\underset{out}{Emb}$ est utilisée pour rediriger les arrêtes contenue dans m(v) qui pointais vers des arrêtes du reste du graph.
+
+\begin{myfig}{sousGraph}{$\underset{out}{Emb} ~ et ~ $\underset{out}{Emb}}
 \tikzset{>=latex}
 \begin{tikzpicture}
     \node[empty] at (1,5) {L};
@@ -608,25 +610,112 @@ Le but de cette partie est de démontrer que certaines propriétés du programme
 \item l'appelle d'une méthode
 \end{itemize}
 
-Pour cela nous avons besoin d'une fonction de tracking, tr.
+Pour cela nous avons besoin d'introduire le concept d'une fonction de tracking appelée, tr.
 
 \subsection{Définition, Préservation d'une expression de graph}
-GE étant une expression de graph et G, H étant des graph de programme. La fonction tr: {$V_G$} \vec {$V_H$} est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction "tr \circ oc" est une occurence de GE dans H.
+GE étant un graph d'expression, G et H étant des graphs de programme. La fonction tr: {$V_G$} \vec {$V_H$} est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurence de GE dans H.
 
 Pour chaque production de graph une fonction tr existe et mappe les noeuds de LHS dans ceux de RHS.
 
 \subsection{Définition, Fonction de tracking}
+Si G derive de H grâce à une production p = (L,R,Embin,Embout) via m et n, alors la fonction de tracking tr : {$V_G$} \vec {$V_H$} est définie comme suit :
 
-\begin{myfig}{preservation}{Préservation}
-MD  \mathrm{( e|c ) * u} V \mathrm{t} VD
-\end{myfig}
+tr(v) = { \(n \circ trp \circ m-1(v)\) , si v est une node de m(L)\\ v, si v n'est pas une node de m(L) 
 
-Le graph d'expression~\ref{preservation} permet de définir que chaque définition de méthode qui met à jour une variable dans un graph de départ, doit mettre à jour cette variable dans le graph résultat.
-Toutefois, cette variable peut être mis à jour par un appelle à une méthode à la place d'une mise à jour directe.
+\[tr(v) = \left\{
+  \begin{array}{lr}
+    \(n \circ trp \circ m^{-1}(v)\) : si v est une node de m(L)\\
+    \(v\) : si v n'est pas une node de m(L) 
+  \end{array}
+\right.
+\]
 
-
+Cette définition mathématique définit :
+\begin{itemize}[label=\textbullet]
+\item Pour tout noeud contenu dans m(L), la fonction m-1(v) va chercher le noeud dans Vg et le mappe dans L ensuite la fonction de tracking mappe le noeud de L dans R et enfin N mappe le noeud de R dans Vh.
+\item Pour tout les autres noeuds, ils ne faut rien faire.
+\end{itemize}
 
 \subsection{Préservation du comportement : Encapsulate Variable}
+
+\subsubsection{Production et table}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+  thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+\tikzstyle{EdgeStyle}=[bend left]
+
+\node (rect) at (0,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (type) {Integer};
+\node (rect) at (0,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (varLeft) {var V 1};
+
+\draw[red, arrows={-Triangle[angle=90:10pt,red,fill=black]}]  (1,1) -- (3,1);
+\node[red] at (2,0.5) {P1};
+
+\node (rect) at (4,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (setter) {Set M 2};
+\node (rect) at (4,4) [draw,thick,minimum width=0.5cm,minimum height=0.5cm] (p) {P};
+\node (rect) at (4,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (getter) {Get M 3};
+\node (rect) at (6,1) [draw,thick,minimum width=1cm,minimum height=0.5cm] (varRight) {var V 1};
+
+\path[every node/.style={font=\sffamily\small}]
+    (varRight) edge [right] node [right] {t} (type)
+    (getter) edge [bend left] node [right] {t} (type)
+    (p) edge [right] node [right] {t} (type)
+    (varLeft) edge node [top] {t} (type)
+    (setter) edge [left] node [right] {1.p} (p)
+
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+  thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+\tikzstyle{EdgeStyle}=[bend left]
+
+\node (rect) at (0,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (setter) {Set M 2};
+\node (rect) at (0,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (getter) {Get M 3};
+\node (rect) at (2,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (varLeft) {var V 1};
+\node (rect) at (2,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (vdLeft) {VD};
+\node (rect) at (2,-2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (class) {C};
+
+\node (rect) at (0,1) [draw,thick,minimum width=0.5cm,minimum height=0.5cm] (eU) {E};
+\node (rect) at (1,1) [draw,thick,minimum width=0.5cm,minimum height=0.5cm] (eA) {E};
+
+\draw[red, arrows={-Triangle[angle=90:10pt,red,fill=black]}]  (3,1) -- (5,1);
+\node[red] at (4,0.5) {P2};
+
+\node (rect) at (6,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (mdSetter) {MD 4};
+\node (rect) at (6,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (setter) {Set M 2};
+\node (rect) at (8.5,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (varRight) {var V 1};
+\node (rect) at (8.5,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (vdRight) {VD 0};
+\node (rect) at (11,2) [draw,thick,minimum width=1cm,minimum height=0.5cm] (mdGetter) {MD 5};
+\node (rect) at (11,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (getter) {Get M 3};
+
+\path[every node/.style={font=\sffamily\small}]
+     (setter) edge [left] node [right] {l} (mdSetter)
+     (getter) edge [left] node [right] {l} (mdGetter)
+     (mdGetter) edge [left] node [right] {a} (varRight)
+     (mdSetter) edge [left] node [right] {u} (varRight)
+     (eU) edge [left] node [right] {u} (varLeft)
+     (eA) edge [left] node [right] {a} (varLeft)
+     (varLeft) edge [left] node [right] {l} (vdLeft)
+     (varRight) edge [left] node [right] {l} (vdRight)
+     (vdLeft) edge [left] node [right] {m} (class)
+\end{tikzpicture}
+\end{center}
+
+
+  \begin{tabular}{ | l | l |  l |}
+    \hline production & arrêtes entrantes & arrêtes sortantes  \\ \hline
+    P1 : & (\(a,1) {\rightarrow} (a,1)\) &  (\(t,1) {\rightarrow}(t,1),(1.p,2),(t,3)\)   \\ \hline 
+         & (\(u,1) {\rightarrow} (u,1)\) & (\ (l,1) {\rightarrow} (l,1)\)  \\ \hline 
+    P2 : & (\(a,1) {\rightarrow} (c,3)\) &  (\(m,0) {\rightarrow} (\(m,0),(m,4),(m,5)\)\)    \\ \hline 
+         & (\(u,1) {\rightarrow} (c,2)\) &  (\(t,1) {\rightarrow} (t,1)\)  \\ \hline 
+   \end{tabular}
+
+En vue de prouver que notre approche est correcte, prenons l'exemple de la préservation de l'accès à une variable lors du refactoring Encapsulate Variable.
+Dans la figure 11 il faut prouver que P1 et P2 préserve le graph d'expression  \(GE = MD \underset{( e|c ) * a}{\rightarrow} V \underset{t}{\rightarrow}  VD\)
+
+Il suffit de prouver que  les propriétés \(GE1 = MD \underset{( e|c ) * a}{\rightarrow} V \) et  \(GE2 = V \underset{t}{\rightarrow}  VD\) sont conservé. 
 
 On peut observer ici que la mise à jour de la variable dans une méthode est conservée après le refactoring, la seule différence est que l'on appéle une méthode qui met à jour la variable à la place de
 directement mettre à jour la variable. Ce qui a comme résultat que le chemin de la MD jusqu'à la variable devient plus long
@@ -651,6 +740,6 @@ En outre certains problèmes sont apparut, ce qui a demandé des ajouts et des c
 Malgré ces observations, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme. Cependant, il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être employé par un outil de refactoring concret.
 
 
-
+http://fr.wikipedia.org/wiki/Lexique_de_la_th%C3%A9orie_des_graphes
 
 \end{document}
