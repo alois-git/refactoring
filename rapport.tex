@@ -12,12 +12,13 @@
 \usepackage{sistyle}
 \usepackage[autolanguage]{numprint}
 \usepackage{fullpage}
-
+\usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{xparse}
 \usepackage{tikz}
 \usepackage{enumitem}
 \usepackage{amsmath}
+
 \setlength{\parskip}{1em}
 \usetikzlibrary{arrows, decorations.markings}
 
@@ -109,8 +110,6 @@ En vue de pouvoir s'integrer au mieux dans les logiciels de refactoring, la repr
 
 Il est également important que le model reste conci pour facilité sa compréhension. De ce faite nous incluerons uniquement les choses requisent pour prouver les propriétés du refactoring.
 
-\subsection{Les différents type de graph}
-
 \subsection{Le graph de type}
 
 Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter. Un graph de programme devra respecter toutes ces contraintes ou bien être condidéré comme un programme syntaxiquement incorrecte. De ce faite il servira à prouver que le refactoring produit des programmes valide.
@@ -135,7 +134,7 @@ Pour régler ce problème nous auront besoin des graphs d'expressions expliqué 
 Un graph de type est un graph labellé contenant un ensemble de noeuds typés et d'arrêtes typées. \(G\) étant un graph et \(TG\) un graph typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
 de \(G\) dans \(TG\) conservant les arrêtes sources, les arrêtes destination et les labels. Pour les labels on prend en compte uniquement le nom.
 
-\subsubsection{Les differents type de node}
+\subsubsection{Type de noeuds}
 
   \begin{tabular}{ | l | l | l | p{5cm} |}
     \hline
@@ -149,7 +148,7 @@ de \(G\) dans \(TG\) conservant les arrêtes sources, les arrêtes destination e
     E &  Expression contenue dans une définition de méthode \\ \hline
     \end{tabular}
 
-\subsubsection{Les différents type d'arrêtes}
+\subsubsection{Type d'arrêtes}
   \begin{tabular}{ | l | l |  l |}
     \hline type & application & description  \\ \hline
     l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline
@@ -291,7 +290,7 @@ Dans cette optique, nous nous concentrerons ici sur trois proprieté.
 \item Préservation de l'appele, chaque méthode appelera au moins toutes les méthodes appelées avant le refactoring
 \end{itemize}
 
-\subsection{Productions de graph pour exprimer le refactoring}
+\subsection{Transformation de graph}
 
 Pour représenter un refactoring appliqué sur le code source d'un programme, on applique des productions de graph sur le graph de programme.
 
@@ -305,7 +304,7 @@ Il reste cependant quelques problèmes:
 \item Il est possible que certaines arrêtes ne pointent vers aucuns noeuds suite a l'application d'un refatoring. Par exemple, elles accedaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter). Ces arrêtes ne sont normalement pas autorisé mais les éviter serait beaucoup trop complexe. En effet les inclures dans les représentations de LHS et RHS créerait des ensembles LHS et RHS infinits. Pour pallier à ce problème on emploie un méchanisme appellé "embedding mechanism" qui autorise ces arrêtes oprhelines et qui présisera comment les rediriger.
 \end{enumerate}
 
-\subsubsection{Règles de transformation de graph}
+\subsubsection{Règles de transformation}
 
 Quelques notions doivent être définies avant de pouvoir appliquer une production à un graph:
 
@@ -363,7 +362,7 @@ Quelques notions doivent être définies avant de pouvoir appliquer une producti
 
 \subsubsection{Definition}
 
-La définition mathématique est donnée à la page 15 de l'article "Formalizing Refactorings with Graph Transofrmations".
+La définition mathématique est donnée dans l'article~\cite[p.~15]{mainArticle}.
 
 Je vais tout de même l'expliquer en français à l'aide des figures~\ref{sousGraph1} et \ref{sousGraph2}.
 
@@ -600,7 +599,7 @@ Après avoir remonté la méthode de la classe ManualCar dans la classe Vehicule
 
 \section{Préservation du comportement du programme}
 
-Nous avons jusqu'ici définit des mécanismes permettent de refactorer un programme gràce aux graphs. Mais nous n'avons pas encore prouvé que ce programme conservait sont comportement à la suite de ces transformations.
+Jusqu'ici nous avons définit des mécanismes permettant de refactorer un programme à l'aide de graph.Il nous reste encore à prouvé que ce programme conserve son comportement à la suite de ces transformations.
 
 Le but de cette partie est de démontrer que certaines propriétés du programme sont preservée après un refactoring:
 \begin{itemize}[label=\textbullet]
@@ -609,17 +608,18 @@ Le but de cette partie est de démontrer que certaines propriétés du programme
 \item l'appelle d'une méthode
 \end{itemize}
 
-Pour cela nous avons besoin d'introduire le concept d'une fonction de tracking appelée, tr.
+Pour cela nous avons besoin d'introduire le concept d'une fonction de tracking appelée, \(tr\).
 
 \subsection{Définition, Préservation d'une expression de graph}
-GE étant un graph d'expression, G et H étant des graphs de programme. La fonction tr: \( {$V_G$} \vec {$V_H$} \) est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurence de GE dans H.
+
+\(GE\) étant un graph d'expression, \(G\) et \(H\) étant des graphs de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\) est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurence de GE dans H.
 
 Pour chaque production de graph une fonction tr existe et mappe les noeuds de LHS dans ceux de RHS.
 
 \subsection{Définition, Fonction de tracking}
-Si G derive de H grâce à une production p = (L,R,Embin,Embout) via m et n, alors la fonction de tracking tr : \( {$V_G$} \vec {$V_H$} \) est définie comme suit :
+Si \(G\) derive \(H\) grâce à une production \( P = (L,R,$\underset{in}{Emb}$ ,$\underset{out}{Emb}$ ) \) via m et n, alors la fonction de tracking tr : \( {$V_G$} \rightarrow {$V_H$} \) est définie comme suit :
 
-tr(v) = { \(n \circ trp \circ m-1(v)\) , si v est une node de m(L)\\ v, si v n'est pas une node de m(L)
+tr(v) = { \(n \circ trp \circ m-1(v)\) , si v est une node de \(m(L)\) \\ v, si v n'est pas une node de \(m(L)\)
 
 \[tr(v) = \left\{
   \begin{array}{lr}
@@ -631,7 +631,8 @@ tr(v) = { \(n \circ trp \circ m-1(v)\) , si v est une node de m(L)\\ v, si v n'e
 
 Cette définition mathématique définit :
 \begin{itemize}[label=\textbullet]
-\item Pour tout noeud contenu dans m(L), la fonction m-1(v) va chercher le noeud dans Vg et le mappe dans L ensuite la fonction de tracking mappe le noeud de L dans R et enfin N mappe le noeud de R dans Vh.
+\item Pour tout noeud contenu dans m(L), la fonction \(m^{-1}(v)\) va chercher le noeud dans {$V_G$} et le mappe dans L ensuite la fonction de tracking mappe le noeud de L
+dans R et enfin la fonction \( n \) mappe le noeud de R dans {$V_H$}.
 \item Pour tout les autres noeuds, ils ne faut rien faire.
 \end{itemize}
 
@@ -770,23 +771,72 @@ On peut deduire que GE1 est preservée par P2
 
 \section{Conclusion}
 
-Le but de cet article était de prouver que le refactoring n'altérait pas le comportement d'un programme à l'aide de transformation de graph. En effet le code source d'un programme peut être facilement représenté avec un graph, les transformations faites à ce code source lors d'un refactoring peuvent être exprimée avec des transformations de graph et le modèle choisit est suffisant clair pour prouver que le refactoring conserve certaines propriétés du programme.
+Le but de cet article était de prouver mathématiquement que le refactoring n'altérait pas le comportement d'un programme. A cet effet, le code source des programmes sont représentés sous forme de graph
+et les transformations effectuées sur ce code source lors d'un refactoring sont exprimées avec des transformations de graph.
+L'avantage de ce modèle est sa simplicité, ce qui permet de prouver la conservations de certaines propriétés du programme après un refactoring.
 
-En outre certains problèmes sont apparut, ce qui a demandé des ajouts et des compromis.
+Malgré cela certains problèmes ont du être pris en compte, ce qui a demandé des ajouts et des compromis sur le modèle de base:
 
-- Pour les Preconditions, certaines contraintes on été mis de coté. Par exemple pour le refactoring PullUpMethod, on ne contronlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
+\begin{itemize}
+\item Concernant les Préconditions, certaines contraintes on été mis de coté. Par exemple pour le refactoring PullUpMethod, on ne contronlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
 
-- Pour la représentation en graph, dans le but de supporté un large éventaille de language nous avons ajouté la possibilité d'attaché des attribus supplémentaires aux noeuds.
+\item Concernant la représentation en graph, dans le but de supporté un large éventaille de language nous avons ajouté la possibilité d'attaché des attribus supplémentaires aux noeuds.
 
-- Pour le graph de type, toutes les contraites n'étaient pas représentable à l'aide d'un graph de type, nous avons donc introduit les graph d'expression.
+\item Concernant le graph de type, toutes les contraites n'étaient pas représentable à l'aide de ce graph de type, nous avons donc introduit les graphs d'expressions.
 
-- Pour les transformations de graph, ?????
+\item Concernant les transformations de graph, tout les types de refatoring ne pouvant pas être représenté à l'aide d'une seule transformation, nous avons permis de diviser un refactoring en une sucession de plusieurs transformations
 
-- Pour la préservation du comportement, ?????
+\item Concernant la préservation du comportement, Un concept de fonction de traquing a été employé pour permettre de traquer un noeud avant et après une transformation.
+\end{itemize}
 
-Malgré ces observations, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme. Cependant, il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être employé par un outil de refactoring concret.
+Il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être utilisée par un outil de refactoring.
+De plus bien que ce modèle soit relativement simple,il nécessite une bonne connaissance des graphs mathématiques.
+
+Toute fois, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme et son coté visuel si employé dans un outil comme agg est un plus pour la compréhension.
 
 
-http://fr.wikipedia.org/wiki/Lexique_de_la_th%C3%A9orie_des_graphes
+\begin{thebibliography}{9}
+
+\bibitem{aggManual}
+  agg-team,
+  The Agg 1.4.0 Development Environment The User Manual.
+
+\bibitem{mainArticle}
+  Tom Mens, Niels Van Eetvelde, Serge Demeyer and Dirk Janssens,
+  Formalizing Refactorings with Graph Transformations.
+
+\bibitem{secondArticle}
+  Tom Mens and Tom Tourwe ,
+  A Survey of Software Refactoring.
+
+\bibitem{otherArticle}
+  Tom Mens, Gabriele Taentzer and Olga Runge,
+  Detecting Structural Refactoring Conflicts Using Critical Pair Analysis.
+
+\bibitem{redaAcricle}
+  Hadrien Mélot,
+  Eléments de rédaction scientifique en informatique.
+
+\bibitem{aggHelp}
+  Gabriele Taentzer,
+  AGG: A Tool Environment for Algebraic Graph Transformation.
+
+\bibitem{refactoring}
+    Martin Fowler (with Kent Beck, John Brant, William Opdyke, and Don Roberts),
+    Refactoring Improving the Design of Existing Code.
+
+\bibitem{wikiGraph}
+  \url{http://fr.wikipedia.org/wiki/Lexique_de_la_th%C3%A9orie_des_graphes}
+
+\bibitem{latexGraph}
+  \url{http://texdoc.net/texmf-dist/doc/generic/pgf/pgfmanual.pdf}
+
+\bibitem{aggSite}
+  \url{http://user.cs.tu-berlin.de/~gragra/agg/}
+
+\bibitem{latexSymboles}
+  \url{http://fr.wikipedia.org/wiki/Table_des_symboles_math%C3%A9matiques}
+
+\end{thebibliography}
 
 \end{document}
