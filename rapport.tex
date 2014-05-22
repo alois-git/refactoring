@@ -626,7 +626,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsection{Définition, Préservation d'une expression de graph}
 
-  \(GE\) étant un graph d'expression, \(G\) et \(H\) étant des graphs de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\) est un mappage de noeuds tels que pour chaque occurence oc de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurence de GE dans H.
+  \(GE\) étant un graph d'expression, \(G\) et \(H\) étant des graphs de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\) est un mappage de noeud tels que pour chaque occurence \( oc \) de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurence de GE dans H.
 
   Pour chaque production de graph une fonction tr existe et mappe les noeuds de LHS dans ceux de RHS.
 
@@ -752,18 +752,18 @@ title=\lstname                   % show the filename of files included with \lst
   Il suffit de prouver (voir figure~\ref{embedding}) que les productions P1 et P2 préserve les propriétés \(GE1 = MD \underset{( e|c ) * a}{\rightarrow} V \) et  \(GE2 = V \underset{t}{\rightarrow}  VD\).
 
   \begin{enumerate}
-    \item Pour la production P1. G et H étant des graphs et G derive H en fonction de P1 via m et n, et tr est la fonction de tracking. oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurence de  {$GE_1$} dans G.
+    \item Pour la production P1. G et H étant des graphs et G derivant H en fonction de P1 via m et n, et tr étant la fonction de traquing. oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurence de  {$GE_1$} dans G.
     Alors il existe ue chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} {$v_2$} \underset{e}{\rightarrow} {$v_3$} \underset{a}{\rightarrow} {$v_n$} \) dans G
     ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de {$V_{GE1}$}. Si il existe un chemin {$v_0$} {\rightarrow} {$v_n$} dans G alors il doit exister un chemin {$v_0$} {\rightarrow} {$v_n$} dans H.
 
     Premièrement considérons les noeuds {$v_1$} {\rightarrow} {$v_n$}, il sont tous de type E ou MD et ne sont donc pas contenu dans la partie remplacée du graph G, m(l).
     Les noeuds sont donc remappé tel quel dans H.
 
-    Deuxiemement si {$v_0$} n'est pas contenu dans m(l), tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}).
-    Si par contre {$v_0$} est contenu dans m(l) alors {$v_0$} correspondra au noeud MD dans L et au noeud MD dans la RHS de P1. Aucune transformation n'affecte les expressions et les méthodes dans P1
+    Deuxiemement si {$v_0$} n'est pas contenu dans m(L), tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}).
+    Si par contre {$v_0$} est contenu dans m(L) alors {$v_0$} correspondra au noeud MD dans L et au noeud MD dans la RHS de P1. Aucune transformation n'affecte les expressions et les méthodes dans P1
 
     Finalement si {$v_n$} n'est pas contenu dans m(l), tr{$v_n$})= {$v_n$} et donc tr({$v_n-1$}) \underset{e}{\rightarrow} tr({$v_n$}).
-    Si par contre {$v_n$} est contenu dans m(l) alors {$v_n$} correspond au noeud 1 dans L et tr{$v_n$}) au noeud 1 dans la RHS de P1. Vu que (a,1) {\rightarrow} (a,1) E Embin, tr(Vn-1) \underset{c|e * a}{\rightarrow} tr({$v_n$}).
+    Si par contre {$v_n$} est contenu dans m(L) alors {$v_n$} correspond au noeud 1 dans L et tr{$v_n$}) au noeud 1 dans la RHS de P1. Vu que (a,1) {\rightarrow} (a,1) E Embin, tr(Vn-1) \underset{c|e * a}{\rightarrow} tr({$v_n$}).
 
     En résumé la production P1 ne remplace aucuns noeuds ou arrêtes, On peut deduire que GE1 est preservée par P1
 
@@ -785,13 +785,15 @@ title=\lstname                   % show the filename of files included with \lst
 
   \section{Conclusion}
 
-  Le but de cet article était de prouver mathématiquement que le refactoring n'altérait pas le comportement d'un programme. A cet effet, le code source des programmes sont représentés sous forme de graph
-  et les transformations effectuées sur ce code source lors d'un refactoring sont exprimées avec des transformations de graph.
-  L'avantage de ce modèle est sa simplicité, ce qui permet de prouver la conservations de certaines propriétés du programme après un refactoring.
+  Le but de cet article était de prouver que le refactoring n'altérait pas le comportement d'un programme.
+  A cet effet, il fallait créer un modèle simple et compatible avec les outils de refactoring actuels. Nous avons donc choisit de représenter le code source des programmes sous forme de graph
+  et les transformations effectuées sur ce code source lors d'un refactoring sous forme de transformations de graph. Puis nous avons ajouté des contraintes à ces graphs de programme à l'aide d'un graph de type et d'autre mécanisme.
 
-  Malgré cela certains problèmes ont du être pris en compte, ce qui a demandé des ajouts et des compromis sur le modèle de base:
+  Finalement il nous a fallu prouver la conservation de certaines propriétés dans ces graphs après les transformations.
 
-  \begin{itemize}
+  Malgré cela certains problèmes ont persister et nous ont amené à faire des ajouts et des compromis sur ce modèle:
+
+  \begin{itemize}[label=\textbullet]
     \item Concernant les Préconditions, certaines contraintes on été mis de coté. Par exemple pour le refactoring PullUpMethod, on ne contronlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
 
     \item Concernant la représentation en graph, dans le but de supporté un large éventaille de language nous avons ajouté la possibilité d'attaché des attribus supplémentaires aux noeuds.
@@ -806,8 +808,9 @@ title=\lstname                   % show the filename of files included with \lst
   Il est difficile à dire si cette approche formelle peut réellement servir dans une approche pratique et être utilisée par un outil de refactoring.
   De plus bien que ce modèle soit relativement simple,il nécessite une bonne connaissance des graphs mathématiques.
 
-  Toute fois, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme et son coté visuel si employé dans un outil comme agg est un plus pour la compréhension.
+  Toutefois, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme et son coté visuel si employé avec un outil comme AGG~\cite{aggSite} est un plus pour la compréhension.
 
+\newpage
 
   \begin{thebibliography}{9}
 
