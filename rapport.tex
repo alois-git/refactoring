@@ -78,27 +78,29 @@ title=\lstname                   % show the filename of files included with \lst
 
   Qu'est ce que le refactoring ?
 
-  Le refactoring permet de changer la structure d'un programme en vue de l'améliorer tout en préservant son comportement.
+  Le refactoring permet de changer la structure d'un programme en vue de l'améliorer et de le clarifier tout en préservant son comportement.
 
-  Il consiste à déplacer des méthodes, renomer des variables, crée des fonctions ect et est généralement appliqué sur des programmes écrit en language orienté objet.
+  Il consiste à déplacer des méthodes, renommer des variables, supprimer des classes etc. Il est appliqué sur des programmes écrit en language orienté objet.
 
-  Il peut être éffectué à la main, le programmeur va analyser le code et identifier des parties de code à modifier. Ensuite il va apporter les modifications necessaires au programme.
+  Il peut être éffectué à la main par un programmeur qui va analyser le code et identifier les parties à modifier. Ensuite il va apporter les modifications nécessaires au programme.
   Cette technique est assez lente et surtout peu sure, en effet le programmeur peu faire des erreurs et introduire des bugs.
 
-  Pour pallier à ça, des outils de refactoring sont disponibles et permettent d'automatiser les actions comme le renomage d'une variable, le déplacement d'un fonction ect. Tout en garantissant une certaine sécurité.
+  Pour pallier à ça, des outils de refactoring sont disponibles et permettent d'automatiser les actions comme le renommage d'une variable, le déplacement d'une méthode etc.
+  Tout en garantissant une certaine sécurité par rapport au programme.
 
-  Ces outils ne sont malheureusement pas parfait, ils sont pour la plupart spécialisé dans un seul language de programmation et ne garantisent pas à 100 pourcent la préservation du comportement du programme.
+  Malheureusement, ces outils ne sont pas parfait. Ils sont pour la plupart spécialisé dans un seul language de programmation et ne garantisent pas à 100\% la préservation du comportement du programme.
 
-  Cet article va présenter une approche permettant de crée un outil générique et mathématiquement vérifiable. La structure des programmes sera représentée au moyen de graph et le refactoring equivalera à des transformations de ces graphs.
+  Le but de cet article sera de créer un modèle utilisable par ces outils qui sera générique et mathématiquement vérifiable.
 
-  L'avantage des transformations de graph est qu'elles sont vérifiables mathématiquement, ce qui permettra de garentir la conservation de certaines propriétés des programmes.
+  La structure d'un programme sera représentée sous forme de graph et les différents refactorings par des transformations appliquées à ces graphs.
+  Ce qui nous permettra de garentir la conservation de certaines propriétés d'un programme après un refactoring.
 
-  Ainsi nous auront la possibilité de refactorer de manière automatisée sur multiple language de programmation en étant certain de conserver les fonctionnalités de notre programme.
+  Ainsi nous auront la possibilité de refactorer de manière automatisée sur de multiple language de programmation tout en étant certain de conserver les fonctionnalités de notre programme.
 
   \newpage
 
   \section{Représentation en graph}
-  Pour représenter la structure d'un programme orienté objet et les règles de refactoring nous aurons besoin de plusieurs type de graph.
+  Pour représenter la structure d'un programme orienté objet et ses contraintes nous aurons besoin de plusieurs type de graph.
 
   \begin{itemize}[label=\textbullet]
     \item Les graphs de type
@@ -108,7 +110,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   En vue de pouvoir s'integrer au mieux dans les logiciels de refactoring, la représentation en graph s'approchera le plus possible d'un arbre de syntaxe abstrait augmenté de lien.
 
-  Il est également important que le model reste conci pour facilité sa compréhension. De ce faite nous incluerons uniquement les choses requisent pour prouver les propriétés du refactoring.
+  Il est également important que le model reste conci pour facilité sa compréhension. Seule les choses requisent pour prouver les propriétés du refactoring seront représentées.
 
   \subsection{Le graph de type}
 
@@ -744,43 +746,61 @@ title=\lstname                   % show the filename of files included with \lst
     \item Les nouvelles définitions de méthodes appartienne à la même classe que la définition de variable
   \end{itemize}
 
-  Afin de montrer que notre approche est correcte, prouvons la préservation de l'accès à une variable lors d'un refactoring Encapsulate Variable.
-  Le graph d'expression  \(MD \underset{( e|c ) * a}{\rightarrow} V \underset{t}{\rightarrow}  VD\) représente toutes les possibilités d'accès possible à une variable depuis une définition de méthode.
+  Afin de montrer que notre approche est correcte, je vais prouver la préservation de l'accès à une variable lors d'un refactoring Encapsulate Variable.
+  Le graph d'expression  \(MD \underset{( e ) * a}{\rightarrow} V \underset{t}{\rightarrow}  VD\) représente toutes les possibilités d'accès possible à une variable depuis une définition de méthode.
 
-  Garantir la préservation de l'accès consite à prouver que pour chaque occurance de \(MD \underset{( e|c ) * a}{\rightarrow} V \underset{t}{\rightarrow} VD\) dans le graph initial, il y a une occurence correspondante dans le graph resultat.
+  Garantir la préservation de l'accès consite à prouver que pour chaque occurance de \(MD \underset{( e ) * a}{\rightarrow} V \underset{t}{\rightarrow} VD\) dans le graph initial, il y a une occurence correspondante dans le graph resultat.
 
-  Il suffit de prouver (voir figure~\ref{embedding}) que les productions P1 et P2 préserve les propriétés \(GE1 = MD \underset{( e|c ) * a}{\rightarrow} V \) et  \(GE2 = V \underset{t}{\rightarrow}  VD\).
+  Pour cela je vais prouver que les productions P1 et P2 préserve les propriétés \(GE1 = MD \underset{( e ) * a}{\rightarrow} V \) et  \(GE2 = V \underset{t}{\rightarrow}  VD\).
 
   \begin{enumerate}
-    \item Pour la production P1. G et H étant des graphs et G derivant H en fonction de P1 via m et n, et tr étant la fonction de traquing. oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurence de  {$GE_1$} dans G.
-    Alors il existe ue chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} {$v_2$} \underset{e}{\rightarrow} {$v_3$} \underset{a}{\rightarrow} {$v_n$} \) dans G
-    ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de {$V_{GE1}$}. Si il existe un chemin {$v_0$} {\rightarrow} {$v_n$} dans G alors il doit exister un chemin {$v_0$} {\rightarrow} {$v_n$} dans H.
+    \item
 
-    Premièrement considérons les noeuds {$v_1$} {\rightarrow} {$v_n$}, il sont tous de type E ou MD et ne sont donc pas contenu dans la partie remplacée du graph G, m(l).
-    Les noeuds sont donc remappé tel quel dans H.
+    \begin{itemize}[label=\textbullet]
 
-    Deuxiemement si {$v_0$} n'est pas contenu dans m(L), tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}).
-    Si par contre {$v_0$} est contenu dans m(L) alors {$v_0$} correspondra au noeud MD dans L et au noeud MD dans la RHS de P1. Aucune transformation n'affecte les expressions et les méthodes dans P1
+      Pour la production P1. $G$ et $H$ étant des graphs et $G$ derivant $H$ en fonction de $P1$ via $m$ et $n$, et tr étant la fonction de tracking. oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurence de  {$GE_1$} dans $G$.
+      Alors il existe un chemin \( v_0 \underset{e}{\rightarrow} v_1 \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} v_n \) dans $G$
+      ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de $V_{GE1}$
+      alors il doit exister un chemin \( tr(v_0) \underset{e}{\rightarrow} tr(v_1) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1}) \underset{a}{\rightarrow} {v_n} \) dans $H$.
 
-    Finalement si {$v_n$} n'est pas contenu dans m(l), tr{$v_n$})= {$v_n$} et donc tr({$v_n-1$}) \underset{e}{\rightarrow} tr({$v_n$}).
-    Si par contre {$v_n$} est contenu dans m(L) alors {$v_n$} correspond au noeud 1 dans L et tr{$v_n$}) au noeud 1 dans la RHS de P1. Vu que (a,1) {\rightarrow} (a,1) E Embin, tr(Vn-1) \underset{c|e * a}{\rightarrow} tr({$v_n$}).
+      \item Premièrement considérons les noeuds $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1})$,
+      il sont tous de type E et ne sont donc pas contenu dans la partie remplacée $m(L)$ de $G$.
+      Les noeuds sont remappé tel quel dans $H$ et il existe donc un chemin $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1})$ dans $H$.
 
-    En résumé la production P1 ne remplace aucuns noeuds ou arrêtes, On peut deduire que GE1 est preservée par P1
+      \item Deuxiemement pour le noeud {$v_0$} de type MD n'est pas contenu dans $m(L)$, $tr(v_0) = v_0 et donc tr(v_0) \underset{e}{\rightarrow} tr(v_1)$ est conservé dans $H$.
 
-    \item Pour la production P2. G et H étant des graphs et G derive H en fonction de P1 via m et n, et tr est la fonction de tracking. oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurence de  {$GE_1$} dans G.
-    Alors il existe ue chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} {$v_2$} \underset{e}{\rightarrow} {$v_3$} \underset{a}{\rightarrow} {$v_n$} \) dans G
-    ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de {$V_{GE1}$}. Si il existe un chemin {$v_0$} {\rightarrow} {$v_n$} dans G alors il doit exister un chemin {$v_0$} {\rightarrow} {$v_n$} dans H.
+      \item Finalement pour le noeud {$v_n$} si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n et donc tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      Si par contre $v_n$ est contenu dans $m(L)$ alors $v_n$ correspond au noeud 1 dans L et $tr(v_n)$ au noeud 1 dans la RHS de P1.
+      Vu que ((a,1),(a,1)) \in $Emb_in$, $tr(v_{n-1}) \underset{e * a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      Vu que ((l,1),(l,1)) \in $Emb_out$ la variable garde sa définition de méthode.
+      Vu que ((t,1),(t,1)) et ((t,1),(1.p,2)) et ((t,1),(t,3)) \in $Emb_out$ on peut garantir que la variable garde le même type, que le getter retourne le type de la variable et que le paramêtre du setter est bien
+      du même que la variable.
 
-    Premièrement considérons les noeuds  {$v_1$} {\rightarrow} {$v_n$}, il sont  tous de type E et ne sont donc pas contenu dans la partie remplacée du graph G, m(l).
-    Les noeuds sont donc remappé tel quel dans H.
+      \item On peut deduire que GE1 est preservée par P1
+    \end{itemize}
 
-    Deuxiemement si {$v_0$} n'est pas contenu dans m(l), tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}).
-    Si par contre {$v_0$} est contenu dans m(l) alors {$v_0$} correspondra au noeud 4 et 5 dans L et au noeud 4 et 5 dans la RHS de P1. Aucune transformation n'affecte les méthodes dans P2
+    \item
 
-    Finalement si {$v_n$} n'est pas contenu dans m(l), tr{$v_n$})= {$v_n$} et donc tr({$v_n-1$}) \underset{e}{\rightarrow} tr({$v_n$}).
-    Si par contre {$v_n$} est contenu dans m(l) alors {$v_n$} correspond au noeud 1 dans L et tr{$v_n$}) au noeud 1 dans la RHS de P2. vu que (a,1) {\rightarrow} (c,3) E Embin, tr(Vn-1) \underset{c * a}{\rightarrow} tr({$v_n$}).
+    \begin{itemize}[label=\textbullet]
+      Pour la production P2. $G$ et $H$ étant des graphs et $G$ derive $H$ en fonction de $P2$ via $m$ et $n$, et $tr$ est la fonction de tracking.
+      oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurence de {$GE_1$} dans $G$.
+      Alors il existe ue chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {$v_n$} \) dans $G$
+      ou {$v_0$} est la node 1 de {$V_GE1$} et {$v_n$} est la node 2 de {$V_{GE1}$}
+      alors il doit exister un chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {$v_n$} \) dans $H$.
 
-    On peut deduire que GE1 est preservée par P2
+      \item Premièrement considérons les noeuds $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_n-1)$, il sont  tous de type E et ne sont donc pas contenu dans la partie remplacée $m(L)$ de $G$.
+      Les noeuds sont remappé tel quel dans $H$ et il existe donc un chemin $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_n-1)$ dans $H$.
+
+      \item Deuxiemement pour le noeud {$v_0$} de type MD n'est pas pas contenu dans $m(L)$, tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}) est conservé dans $H$.
+
+      \item  Finalement pour le noeud {$v_n$} si il n'est pas contenu dans $m(L)$, tr{$v_n$})= {$v_n$} et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      Si par contre {$v_n$} est contenu dans $m(L)$ alors {$v_n$} correspond au noeud 1 dans L et tr($v_n$) au noeud 1 dans la RHS de P1.
+      Vu que ((a,1),(c,3)) \in $Emb_in$, $tr(v_{n-1}) \underset{e * a}{\rightarrow} tr(v_n)$ est conservé dans $H$ car l'expression appelera le getter qui lui mettera à jour la méthode.
+      Vu que ((m,0),(m,4)) et ((m,0),(m,5)) \in $Emb_out$ on peut garantir que les méthodes seront accessible par $v_{n-1}$ car elle appartiennent à la même classe que la variable $v_n$.
+
+      \item On peut deduire que GE1 est preservée par P2
+    \end{itemize}
+
   \end{enumerate}
 
   \section{Conclusion}
@@ -810,7 +830,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   Toutefois, l'approche utilisée reste éfficace pour définir l'effet de chaque refactoring sur le code source d'un programme et son coté visuel si employé avec un outil comme AGG~\cite{aggSite} est un plus pour la compréhension.
 
-\newpage
+  \newpage
 
   \begin{thebibliography}{9}
 
