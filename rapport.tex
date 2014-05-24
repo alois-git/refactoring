@@ -133,8 +133,8 @@ title=\lstname                   % show the filename of files included with \lst
   \end{myfig}
 
   \subsubsection{Définition}
-  Un graph de type est un graph labellé contenant un ensemble de noeuds typés et d'arrêtes typées. \(G\) étant un graph et \(TG\) un graph typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
-  de \(G\) dans \(TG\) conservant les arrêtes sources, les arrêtes destination et les labels. Pour les labels on prend en compte uniquement le nom.
+  Un graph de type est un graph labellé contenant un ensemble de noeuds typés et d'arêtes typées. \(G\) étant un graph et \(TG\) un graph typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
+  de \(G\) dans \(TG\) conservant les arêtes sources, les arêtes destination et les labels. Pour les labels on prend en compte uniquement le nom.
 
   \subsubsection{Type de noeuds}
 
@@ -150,7 +150,7 @@ title=\lstname                   % show the filename of files included with \lst
     E &  Expression contenue dans une définition de méthode \\ \hline
   \end{tabular}
 
-  \subsubsection{Type d'arrêtes}
+  \subsubsection{Type d'arêtes}
   \begin{tabular}{ | l | l |  l |}
     \hline type & application & description  \\ \hline
     l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline
@@ -167,7 +167,7 @@ title=\lstname                   % show the filename of files included with \lst
     \includegraphics[width=\textwidth]{typeGraph.png}
   \end{myfig}
 
-  La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possibles entre les noeuds typés et les arrêtes typées.
+  La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possibles entre les noeuds typés et les arêtes typées.
 
   Voici quelques exemples:
   \begin{itemize}[label=\textbullet]
@@ -180,14 +180,14 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsection{Les graphs de programme}
 
-  Un graph de programme est un graph typé et labelé représentant la structure du code source d'un programme. Il est composé de noeuds typés reliés par des arrêtes typées. Ses noeuds et ses arrêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
+  Un graph de programme est un graph typé et labelé représentant la structure du code source d'un programme. Il est composé de noeuds typés reliés par des arêtes typées. Ses noeuds et ses arêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
 
   \subsubsection{Definition}
-  \(G \) est composé d'un ensemble de noeuds labelés et d'arrêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},\(nlabg \)), ou {$V_G$} est un ensemble de noeuds, \(nlabg \) est une function de nomage de noeud et {$E_G$} est un ensemble d'arrêtes. Les arrêtes sont représentées par un triplet (noeud depart, label, noeud destination).
+  \(G \) est composé d'un ensemble de noeuds labelés et d'arêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},\(nlabg \)), ou {$V_G$} est un ensemble de noeuds, \(nlabg \) est une function de nomage de noeud et {$E_G$} est un ensemble d'arêtes. Les arêtes sont représentées par un triplet (noeud depart, label, noeud destination).
 
-  Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des noeuds dont le label est une paire composée d'un nom et d'un type. Et les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arrêtes.
+  Dans un graph de programme les entité (classes, variables, méthodes et paramètres) sont représentés par des noeuds dont le label est une paire composée d'un nom et d'un type. Et les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arêtes.
 
-  Ces arrêtes possèdent un label dans le but de faire la différence entre les arrêtes de même type ayant le même noeud source et le même noeud destination.
+  Ces arêtes possèdent un label dans le but de faire la différence entre les arêtes de même type ayant le même noeud source et le même noeud destination.
 
   \begin{myfig}{typedGraph}{Graph de programme}
     \includegraphics[width=\textwidth]{typedGraph.png}
@@ -197,7 +197,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   Dans la section~\ref{subsec:graphExpression} nous avons évoqué les graphs d'expressions en vue de représenter des contraintes supplémentaires.
 
-  Ces graphs possèdent des arrêtes dont les labels peuvent être des expressions régulières, ceci permet de représenter un ensemble de graph à partir d'un seul.
+  Ces graphs possèdent des arêtes dont les labels peuvent être des expressions régulières, ceci permet de représenter un ensemble de graph à partir d'un seul.
 
   Il suffit de remplacer les expressions régulières par leurs valeurs et de créer un graph pour chacune de celle çi. Exemple figure~\ref{graphExpression}
 
@@ -205,7 +205,7 @@ title=\lstname                   % show the filename of files included with \lst
     \includegraphics{graphExpression.png}
   \end{myfig}
 
-  A gauche de la figure~\ref{graphExpression}, se trouve un graph avec une arrête dont le label est une expression régulières.
+  A gauche de la figure~\ref{graphExpression}, se trouve un graph avec une arête dont le label est une expression régulières.
   A droite, sont représentés les deux graphs issu du premier graph, une expression méttant à jour une variable et une expression accédant à une variable.
 
   L'exemple reste assez simple mais vous pouvez imaginer un graph qui peut representer des centaines d'autres graphs.
@@ -307,11 +307,11 @@ title=\lstname                   % show the filename of files included with \lst
     \item La representation d'un refactoring devra être représenté sous forme générique et non spécifique aux noms des classes/méthodes contenues dans le programme sur lequel il est appliqué.
     Pour cela une technique de production de graph avec paramètre va être emloyée.
 
-    \item Il est possible que certaines arrêtes ne pointent plus vers aucuns noeuds suite a l'application d'un refatoring.
+    \item Il est possible que certaines arêtes ne pointent plus vers aucuns noeuds suite a l'application d'un refatoring.
     Par exemple, elles accedaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter).
-    Ces arrêtes ne sont normalement pas autorisé mais les éviter serait beaucoup trop complexe.
+    Ces arêtes ne sont normalement pas autorisé mais les éviter serait beaucoup trop complexe.
     En effet les inclures dans les représentations de LHS et RHS créerait des ensembles LHS et RHS infinits.
-    Pour pallier à ce problème on emploie un méchanisme appellé "embedding mechanism" qui autorise ces arrêtes oprhelines et qui présisera comment les rediriger vers un autre noeud.
+    Pour pallier à ce problème on emploie un méchanisme appellé "embedding mechanism" qui autorise ces arêtes oprhelines et qui présisera comment les rediriger vers un autre noeud.
 
   \end{enumerate}
 
@@ -320,11 +320,11 @@ title=\lstname                   % show the filename of files included with \lst
   Quelques notions doivent être définies avant de pouvoir appliquer une production à un graph:
 
   \begin{enumerate}
-    \item \(G\) étant un graph, un sous graph de \(G\) contient un ensemble de noeuds de \(G\) et uniquement les arrêtes reliant les noeuds contenu dans ce sous graph.
+    \item \(G\) étant un graph, un sous graph de \(G\) contient un ensemble de noeuds de \(G\) et uniquement les arêtes reliant les noeuds contenu dans ce sous graph.
 
-    \item Lorsque l'on applique un mappage sur les noeuds de \(G\), on applique automatiquement un mappage sur les arrêtes reliant ces noeuds.
+    \item Lorsque l'on applique un mappage sur les noeuds de \(G\), on applique automatiquement un mappage sur les arêtes reliant ces noeuds.
 
-    \item \(G\) et \(K\) étant des graphs, une occurence de \(K\) dans \(G\) nécessite que toutes les arrêtes entre les noeuds correspondant existent.
+    \item \(G\) et \(K\) étant des graphs, une occurence de \(K\) dans \(G\) nécessite que toutes les arêtes entre les noeuds correspondant existent.
 
   \end{enumerate}
 
@@ -384,9 +384,9 @@ title=\lstname                   % show the filename of files included with \lst
 
   {$V_H$} est égale au graph \({$V_G$} \setminus~m({$V_L$})~\cup~n({$V_R$})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerai le jaune d'oeuf et on le remplacerait par un autre.
 
-  $\underset{in}{Emb}$ est utilisée pour rediriger les arrêtes partant de noeuds contenu dans \( {$V_G$}~\setminus~m({$V_L$}) \) qui pointais vers des noeuds contenu dans \( m({$V_L$}) \) à des arrêtes d'un noeuds de \( {$V_H$} \setminus n({$V_R$}) \) à un noeuds de \( n({$V_R$}) \).
+  $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenu dans \( {$V_G$}~\setminus~m({$V_L$}) \) qui pointais vers des noeuds contenu dans \( m({$V_L$}) \) à des arêtes d'un noeuds de \( {$V_H$} \setminus n({$V_R$}) \) à un noeuds de \( n({$V_R$}) \).
 
-  $\underset{out}{Emb}$ est utilisée pour rediriger les arrêtes partant de noeuds contenu dans \( m({$V_L$}) \) qui pointais vers des noeuds de \( {$V_G$}~\setminus~m({$V_L$}) \) à des noeuds de \(n({$V_R$}) \) vers des neouds de \( {$V_H$}~\setminus~n({$V_R$}) \).
+  $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenu dans \( m({$V_L$}) \) qui pointais vers des noeuds de \( {$V_G$}~\setminus~m({$V_L$}) \) à des noeuds de \(n({$V_R$}) \) vers des neouds de \( {$V_H$}~\setminus~n({$V_R$}) \).
 
   \begin{myfig}{sousGraph}{$\underset{out}{Emb} ~ et ~ $\underset{out}{Emb}}
     \tikzset{>=latex}
@@ -523,7 +523,7 @@ title=\lstname                   % show the filename of files included with \lst
   \end{myfig}
 
   Ici dans la figure~\ref{afterEncapsulateVariable} nous avons les mêmes éléments au dessus mais la partie inférieur à changer.
-  Elle représente le graphique après l'application de la/les transformations. On peut voir que de nouveaux noeuds et de nouvelles arrêtes ont été créer pour représenter les deux nouvelles méthodes.
+  Elle représente le graphique après l'application de la/les transformations. On peut voir que de nouveaux noeuds et de nouvelles arêtes ont été créer pour représenter les deux nouvelles méthodes.
 
   Je n'ai laissé que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité.
 
@@ -705,7 +705,7 @@ title=\lstname                   % show the filename of files included with \lst
 
 
     \begin{tabular}{ | l | l |  l |}
-      \hline production & arrêtes entrantes & arrêtes sortantes  \\ \hline
+      \hline production & arêtes entrantes & arêtes sortantes  \\ \hline
       P1 : & (\(a,1) {\rightarrow} (a,1)\) &  (\(t,1) {\rightarrow}(t,1),(1.p,2),(t,3)\)   \\ \hline
       & (\(u,1) {\rightarrow} (u,1)\) & (\ (l,1) {\rightarrow} (l,1)\)  \\ \hline
       P2 : & (\(a,1) {\rightarrow} (c,3)\) &  (\(m,0) {\rightarrow} (\(m,0),(m,4),(m,5)\)\)    \\ \hline
@@ -720,7 +720,7 @@ title=\lstname                   % show the filename of files included with \lst
     \item Le type de la variable reste inchangé
     \item Le type de retour du getter est identique à celui de la variable
     \item Le type du paramètre du setter est identique à celui de la variable
-    \item Les arrêtes de types \(a\) ou \(u\) sont changées en arrêtes de types \(c\) pointant vers le getter et le setter.
+    \item Les arêtes de types \(a\) ou \(u\) sont changées en arêtes de types \(c\) pointant vers le getter et le setter.
     \item Les nouvelles définitions de méthodes appartienne à la même classe que la définition de variable
   \end{itemize}
 
