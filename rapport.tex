@@ -63,7 +63,7 @@ columns=flexible,
 title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
-\title{Formalizing Refactorings with Graph Transformation}
+\title{Formalizing Refactorings with graphe Transformation}
 \author{Paulus Alois}
 
 \begin{document}
@@ -80,51 +80,51 @@ title=\lstname                   % show the filename of files included with \lst
 
   Le refactoring permet de changer la structure d'un programme en vue de l'améliorer et de le clarifier tout en préservant son comportement.
 
-  Il consiste à déplacer des méthodes, renommer des variables, supprimer des classes etc. Il est appliqué sur des programmes écrits en langage orienté objet.
+  Ce procédé consiste à déplacer des méthodes, renommer des variables, supprimer des classes etc. Il est appliqué sur des programmes écrits en langage orienté objet.
 
-  Il peut être effectué à la main par un programmeur qui va analyser le code et identifier les parties à modifier. Ensuite, il va apporter les modifications nécessaires au programme.
+  Il peut être effectué à la main par un programmeur qui va analyser le code et identifier les parties à modifier. Ensuite, celui-ci va apporter les modifications nécessaires au programme.
   Cette technique est assez lente et surtout peu sûre. En effet, le programmeur peu faire des erreurs et introduire des bugs.
 
-  Pour pallier à cela, des outils de refactoring sont disponibles et permettent d'automatiser les actions comme le renommage d'une variable, le déplacement d'une méthode etc.
-  Tout en garantissant une certaine sécurité par rapport au programme.
+  Pour pallier à cela, des outils de refactoring sont disponibles et permettent d'automatiser les actions (comme le renommage d'une variable, le déplacement d'une méthode, etc.),
+  tout en garantissant une certaine sécurité par rapport au programme.
 
-  Malheureusement, ces outils ne sont pas parfait. Ils sont pour la plupart spécialisé dans un seul language de programmation et ne garantisent pas à 100\% la préservation du comportement du programme.
+  Malheureusement, ces outils ne sont pas parfait. Ils sont pour la plupart spécialisé dans un seul language de programmation et ne garantissent pas à 100\% la préservation du comportement du programme.
 
   Le but de cet article sera de créer un modèle utilisable par ces outils qui sera générique et mathématiquement vérifiable.
 
-  La structure d'un programme sera représentée sous forme de graph et les différents refactorings par des transformations appliquées à ces graphs.
-  Ce qui nous permettra de garantir la conservation de certaines propriétés d'un programme après un refactoring.
+  La structure d'un programme sera représentée sous forme de graphe et les différents refactorings par des transformations appliquées à ces graphes.
+  Ce qui nous permettra de garantir la conservation de certaines propriétés du programme après un refactoring.
 
   Ainsi, nous aurons la possibilité de refactorer de manière automatisée sur de multiple langage de programmation tout en étant certain de conserver les fonctionnalités de notre programme.
 
   \newpage
 
-  \section{Représentation en graph}
-  Pour représenter la structure d'un programme orienté objet et ses contraintes, nous aurons besoin de plusieurs type de graph.
+  \section{Représentation en graphe}
+  Pour représenter la structure d'un programme orienté objet et ses contraintes, nous aurons besoin de plusieurs types de graphes.
 
   \begin{itemize}[label=\textbullet]
-    \item Les graphs de type
-    \item Les graphs de programme
-    \item Les graphs d'expression
+    \item Les graphes de type
+    \item Les graphes de programme
+    \item Les graphes d'expression
   \end{itemize}
 
-  En vue de pouvoir s'intégrer au mieux dans les logiciels de refactoring, la représentation en graph s'approchera le plus possible d'un arbre de syntaxe abstrait augmenté de liens.
+  En vue de pouvoir s'intégrer au mieux dans les logiciels de refactoring, la représentation en graphe s'approchera le plus possible d'un arbre de syntaxe abstrait augmenté de liens.
 
   Il est également important que le modèle reste concis pour faciliter sa compréhension. Seules les choses requisent pour prouver les propriétés du refactoring seront représentées.
 
-  \subsection{Le graph de type}
+  \subsection{Le graphe de type}
 
-  Le graph de type sert à spécifier les différentes contraintes qu'un graph de programme devra respecter.
-  Un graph de programme devra respecter toutes ces contraintes ou bien être condidéré comme un programme syntaxiquement incorrect.
+  Le graphe de type sert à spécifier les différentes contraintes qu'un graphe de programme devra respecter.
+  Un graphe de programme devra respecter toutes ces contraintes ou bien être considéré comme un programme syntaxiquement incorrect.
   De ce fait, il servira à prouver que le refactoring produit des programmes valides.
 
-  Malheureusement, le graph de type ne suffit pas à représenter toutes les contraintes necessaires pour garantir la structure d'un programme (voir figure~\ref{contraintes}),
-  il faut également y joindre un ensemble de sous graph interdit.
+  Malheureusement, le graphe de type ne suffit pas à représenter toutes les contraintes necessaires pour garantir la structure d'un programme (voir figure~\ref{contraintes}),
+  il faut également y joindre un ensemble de sous-graphes interdits.
 
-  En outre cet ensemble de graphs interdits peut être infini. Par exemple l'interdiction dans une classe de contenir plusieurs variables avec le même nom,
-  consiste à interdir tous les graphs contenant deux ou plus variable de même nom.
+  En outre cet ensemble de sous-graphes interdits peut être infini. Par exemple l'interdiction dans une classe de contenir plusieurs variables avec le même nom,
+  consiste à interdir tous les graphes contenant deux ou plusieurs variables de même nom.
 
-  Pour régler ce problème nous aurons besoin des graphs d'expressions expliqués ci dessous.\label{subsec:graphExpression}
+  Pour régler ce problème nous aurons besoin des graphes d'expressions expliqués ci dessous.\label{subsec:grapheExpression}
 
 
   \begin{myfig}{contraintes}{Exemple de contrainte non représentable}
@@ -137,8 +137,8 @@ title=\lstname                   % show the filename of files included with \lst
   \end{myfig}
 
   \subsubsection{Définition}
-  Un graph de type est un graph labellé contenant un ensemble de noeuds typés et d'arêtes typées. \(G\) étant un graph et \(TG\) un graph typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
-  de \(G\) dans \(TG\) conservant les arêtes sources, les arêtes destination et les labels. Pour les labels, on prend en compte uniquement le nom.
+  Un graphe de type est un graphe étiqueté contenant un ensemble de noeuds typés et d'arêtes typées. \(G\) étant un graphe et \(TG\) un graphe typé. \(G\) est typé par rapport à \(TG\) si il existe une projection
+  de \(G\) dans \(TG\) conservant les arêtes sources, les arêtes destination et les étiquettes. Pour les étiquettes, on prend en compte uniquement le nom.
 
   \subsubsection{Type de noeuds}
 
@@ -167,11 +167,11 @@ title=\lstname                   % show the filename of files included with \lst
     u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
   \end{tabular}
 
-  \begin{myfig}{typeGraph}{Graph de type}
-    \includegraphics[width=\textwidth]{typeGraph.png}
+  \begin{myfig}{typegraphe}{graphe de type}
+    \includegraphics[width=\textwidth]{typegraphe.png}
   \end{myfig}
 
-  La figure~\ref{typeGraph} est un exemple de graph de type, on peut observer toutes les relations possibles entre les noeuds typés et les arêtes typées.
+  La figure~\ref{typegraphe} est un exemple de graphe de type, on peut observer toutes les relations possibles entre les noeuds typés et les arêtes typées.
 
   Voici quelques exemples:
   \begin{itemize}[label=\textbullet]
@@ -182,39 +182,42 @@ title=\lstname                   % show the filename of files included with \lst
   \end{itemize}
 
 
-  \subsection{Les graphs de programme}
+  \subsection{Les graphes de programme}
 
-  Un graph de programme est un graph typé et labelé représentant la structure du code source d'un programme. Il est composé de noeuds typés reliés par des arêtes typées. Ses noeuds et ses arêtes prennent les valeurs vu dans le graph de type figure~\ref{typeGraph} et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedGraph} est un exemple de graph de programme.
+  Un graphe de programme est un graphe typé et étiqueté représentant la structure du code source d'un programme.
+  Il est composé de noeuds typés reliés par des arêtes typées. Ses noeuds et ses arêtes prennent les valeurs vues dans le graphe de type figure~\ref{typegraphe}
+  et sont agrémentés d'un nom et/ou d'autres attributs. La figure~\ref{typedgraphe} est un exemple de graphe de programme.
 
   \subsubsection{Definition}
-  \(G \) est composé d'un ensemble de noeuds labelés et d'arêtes labelées, c'est un graph formé de triplet, ({$V_G$},{$E_G$},\(nlabg \)), ou {$V_G$} est un ensemble de noeuds,
-  \(nlabg \) est une fonction de nommage de noeud et {$E_G$} est un ensemble d'arêtes. Les arêtes sont représentées par un triplet (noeud départ, label, noeud destination).
+  \(G \) est composé d'un ensemble de noeuds étiquetés et d'arêtes étiquetées, c'est un graphe formé de triplet, ({$V_G$},{$E_G$},\(nlabg \)), où {$V_G$} est un ensemble de noeuds,
+  \(nlabg \) est une fonction d'étiquetage de noeud et {$E_G$} est un ensemble d'arêtes. Les arêtes sont représentées par un triplet (noeud départ, étiquette, noeud destination).
 
-  Dans un graph de programme les entités (classes, variables, méthodes et paramètres) sont représentées par des noeuds dont le label est une paire composée d'un nom et d'un type. Et les relations entre ces différentes entités (héritage, appelle de méthodes, appartenance) sont représentées par des arêtes.
+  Dans un graphe de programme les entités (classes, variables, méthodes et paramètres) sont représentées par des noeuds dont l'étiquette est une paire composée d'un nom et d'un type.
+  Et les relations entre ces différentes entités (héritage, appel de méthodes, appartenance) sont représentées par des arêtes.
 
-  Ces arêtes possèdent un label dans le but de faire la différence entre les arêtes de même type ayant le même noeud source et le même noeud destination.
+  Ces arêtes possèdent une étiquette afin de faire la différence entre les arêtes de même type ayant le même noeud source et le même noeud destination.
 
-  \begin{myfig}{typedGraph}{Graph de programme}
-    \includegraphics[width=\textwidth]{typedGraph.png}
+  \begin{myfig}{typedgraphe}{graphe de programme}
+    \includegraphics[width=\textwidth]{typedgraphe.png}
   \end{myfig}
 
-  \subsection{Les graph d'expression}
+  \subsection{Les graphes d'expression}
 
-  Dans la section~\ref{subsec:graphExpression} nous avons évoqué les graphs d'expressions en vue de représenter des contraintes supplémentaires.
+  Dans la section~\ref{subsec:grapheExpression} nous avons évoqué les graphes d'expressions en vue de représenter des contraintes supplémentaires.
 
-  Ces graphs possèdent des arêtes dont les labels peuvent être des expressions régulières, ceci permet de représenter un ensemble de graph à partir d'un seul graph.
+  Ces graphes possèdent des arêtes dont les étiquettes peuvent être des expressions régulières, ceci permet de représenter un ensemble de graphe à partir d'un seul graphe.
 
-  Il suffit de remplacer les expressions régulières par leurs valeurs et de créer un graph pour chacune de celle-çi. Exemple figure~\ref{graphExpression}
+  Il suffit de remplacer les expressions régulières par leurs valeurs et de créer un graphe pour chacune de celle-çi, Comme sur l'exemple de la figure~\ref{grapheExpression}
 
-  \begin{myfig}{graphExpression}{Graph d'expression}
-    \includegraphics{graphExpression.png}
+  \begin{myfig}{grapheExpression}{graphe d'expression}
+    \includegraphics{grapheExpression.png}
   \end{myfig}
 
-  A gauche de la figure~\ref{graphExpression} se trouve un graph avec une arête dont le label est une expression régulière.
+  Sur la gauche de la figure~\ref{grapheExpression} se trouve un graphe avec une arête dont l'étiquette est une expression régulière.
 
-  A droite, sont représentés les deux graphs issu du premier graph, une expression mettant à jour une variable et une expression accédant à une variable.
+  A droite, sont représentés les deux graphes issus du premier graphe, une expression mettant à jour une variable et une expression accédant à une variable.
 
-  L'exemple reste assez simple mais vous pouvez imaginer un graph qui peut representer des centaines d'autres graphs.
+  L'exemple reste assez simple mais vous pouvez imaginer un graphe qui peut representer des centaines d'autres graphes.
 
   \section{Cas d'étude}
 
@@ -227,21 +230,21 @@ title=\lstname                   % show the filename of files included with \lst
 
   Les exemples seront pris sur base du programme Transport, c'est un programme simple écrit en java permettant ces deux refactorings.
 
-  Certains exemples seront donnés sous forme de graph. Dans la plupart des cas, ces graphs ont été réalisés grâce à l'outil AGG.
+  Certains exemples donnés sous forme de graphe ont été réalisés à l'aide de l'outil AGG.
 
   Les caractéristiques de AGG sont:
 
   \begin{itemize}[label=\textbullet]
-    \item Représenter des structures de données sous forme de graph qui peuvent être typé par un graph de type.
-    \item Spécifier des règles sur un graph
-    \item Spécifier des NAC pour exprimer la non-existance de certaines structures lors de transformation de graph
-    \item Application de transformation de graph
-    \item Application séquentielle de transformation de graph
+    \item Représenter des structures de données sous forme de graphe qui peuvent être typé par un graphe de type.
+    \item Spécifier des contraintes sur un graphe
+    \item Spécifier des NAC pour exprimer des conditions de non-existance de certaines structures lors de transformation de graphe.
+    \item Application de transformation de graphe
+    \item Application séquentielle de transformation de graphe
   \end{itemize}
 
-  AGG est assez facile à prendre en main, surtout grâce aux exemples fournis. Il m'a aidé à comprendre certains concepts comme les NACs et m'a été très utile durant toute la rédaction de ce rapport.
+  AGG est assez facile à prendre en main, surtout grâce aux exemples fournis. Cet outil m'a aidé à comprendre certains concepts comme les NACs et m'a été très utile durant toute la rédaction de ce rapport.
 
-  \subsection{Programme Transport}
+  \subsection{Code source du programme Transport}
 
   \begin{lstlisting}[frame=single]
     public class Vehicule {
@@ -287,7 +290,7 @@ title=\lstname                   % show the filename of files included with \lst
   \subsection{Préservation du comportement}
   \label{subsec:preservationDuComportement}
 
-  La conservation du comportement d'un programme est une chose primordiale lors d'un refactoring.
+  La conservation du comportement d'un programme est primordiale lors d'un refactoring.
   Malheureusement, il n'est pas facile de définir en quoi consiste réellement cette préservation.
 
   Par ailleurs, il sera nécessaire de trouver une définition suffisante garantissant que le programme effectuera les mêmes actions avant et après le refactoring.
@@ -300,43 +303,43 @@ title=\lstname                   % show the filename of files included with \lst
     \item Préservation de l'appel, chaque méthode appellera au moins toutes les méthodes qu'elle appelait avant le refactoring
   \end{itemize}
 
-  \subsection{Transformation de graph}
+  \subsection{Transformation de graphe}
 
-  Pour représenter un refactoring appliqué sur le code source d'un programme, on applique des transformations de graph sur le graph de programme.
+  Pour représenter un refactoring appliqué sur le code source d'un programme, on applique des transformations de graphe sur le graphe de programme.
 
   Il reste cependant quelques problèmes:
 
   \begin{enumerate}
     \item Certains types de refactoring modifient une partie variable d'un programme, ce qui les rend impossible à représenter grâce à une simple transformation.
-    Il faut donc appliquer plusieurs transformations l'une après l'autre dans un ordre spécifique. Pour cela nous aurons besoin d'un mécanisme de réécriture de graph.
+    Il faut donc appliquer plusieurs transformations l'une après l'autre dans un ordre spécifique. Pour cela nous aurons besoin d'un mécanisme de réécriture de graphe.
 
-    \item La représentation d'un refactoring devra être définie sous forme générique et non spécifique aux noms des classes/méthodes contenues dans le programme sur lequel ce refactoring est appliqué.
-    Pour cela, une technique de production de graph avec paramètre va être employée.
+    \item Un refactoring devra être défini sous forme générique et non spécifique aux noms des classes/méthodes contenues dans le programme sur lequel ce refactoring est appliqué.
+    Pour cela, une technique de production de graphe avec paramètre va être employée.
 
     \item Il est possible que certaines arêtes ne pointent plus vers un noeud suite a l'application d'un refactoring.
     Par exemple, si elles accédaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter).
     Ces arêtes ne sont normalement pas autorisées mais les éviter serait trop complexe car nous aurions besoin de créer des ensembles LHS et RHS infinits.
-    Pour pallier à ce problème, on emploie un mécanisme appellé "embedding mechanism" qui autorise ces arêtes orphelines et qui précisera comment les rediriger vers un autre noeud.
+    Pour pallier à ce problème, on emploie un mécanisme appelé "embedding mechanism" qui autorise ces arêtes orphelines et qui précisera comment les rediriger vers un autre noeud.
 
   \end{enumerate}
 
   \subsubsection{Règles de transformation}
 
-  Quelques notions doivent être définies avant de pouvoir appliquer une production à un graph:
+  Quelques notions doivent être définies avant de pouvoir appliquer une production à un graphee:
 
   \begin{enumerate}
-    \item \(G\) étant un graph, un sous graph de \(G\) contient un ensemble de noeuds de \(G\) et uniquement les arêtes reliant les noeuds contenus dans ce sous graph.
+    \item \(G\) étant un graphe, un sous graphe de \(G\) contient un ensemble de noeuds de \(G\) et uniquement les arêtes reliant les noeuds contenus dans ce sous graphe.
 
     \item Lorsque l'on applique un mappage sur les noeuds de \(G\), on applique automatiquement un mappage sur les arêtes reliant ces noeuds.
 
-    \item \(G\) et \(K\) étant des graphs, une occurrence de \(K\) dans \(G\) nécessite que toutes les arêtes entre les noeuds correspondants existent.
+    \item \(G\) et \(K\) étant des graphes, une occurrence de \(K\) dans \(G\) nécessite que toutes les arêtes entre les noeuds correspondants existent.
 
   \end{enumerate}
 
   \tikzstyle{weight} = [font=\small]
   \tikzstyle{edge} = [draw,line width=2pt,-,black]
   \tikzstyle{vertex}=[circle,fill=black!25,minimum size=10pt,inner sep=0pt]
-  \begin{myfig}{sousGraph1}{Graph}
+  \begin{myfig}{sousgraphe1}{graphe}
     \begin{tikzpicture}[scale=1.8, auto,swap]
 
       % First we draw the vertices
@@ -352,7 +355,7 @@ title=\lstname                   % show the filename of files included with \lst
   \end{myfig}
 
 
-  \begin{myfig}{sousGraph2}{Exemple sous graph valide / invalide}
+  \begin{myfig}{sousgraphe2}{Exemple sous graphe valide / invalide}
     \tikzstyle{edge} = [draw,line width=2pt,-,green]
     \tikzstyle{vertex}=[circle,fill=green!25,minimum size=10pt,inner sep=0pt]
     \begin{tikzpicture}[scale=1.8, auto,swap]
@@ -381,19 +384,21 @@ title=\lstname                   % show the filename of files included with \lst
 
   La définition mathématique est donnée dans l'article~\cite[p.~15]{mainArticle}.
 
-  Je vais tout de même l'expliquer à l'aide des figures~\ref{sousGraph1} et \ref{sousGraph2}.
+  Je vais tout de même l'expliquer à l'aide des figures~\ref{sousgraphe1} et \ref{sousgraphe2}.
 
-  \(G\) et \(H\) sont des graphs, \(m\) est une fonction de mappage de \(L\) vers \(G\) et \(n\) est une fonction de mappage de \(R\)  vers \(H\) .
+  \(G\) et \(H\) sont des graphes, \(m\) est une fonction de mappage de \(L\) vers \(G\) et \(n\) est une fonction de mappage de \(R\)  vers \(H\) .
 
-  \(m(v)\) est un sous graph de \(G\) et \(n(w)\) est un sous graph de H.
+  \(m(v)\) est un sous graphe de \(G\) et \(n(w)\) est un sous graphe de H.
 
-  {$V_H$} est égale au graph \({$V_G$} \setminus~m({$V_L$})~\cup~n({$V_R$})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
+  {$V_H$} est égal au graphe \({$V_G$} \setminus~m({$V_L$})~\cup~n({$V_R$})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
 
-  $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {$V_G$}~\setminus~m({$V_L$}) \) qui pointaient vers des noeuds contenus dans \( m({$V_L$}) \) à des arêtes d'un noeuds de \( {$V_H$} \setminus n({$V_R$}) \) à un noeuds de \( n({$V_R$}) \).
+  La fonction $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {$V_G$}~\setminus~m({$V_L$}) \)
+  qui pointaient vers des noeuds contenus dans \( m({$V_L$}) \) à des arêtes d'un noeuds de \( {$V_H$} \setminus n({$V_R$}) \) à un noeuds de \( n({$V_R$}) \).
 
-  $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({$V_L$}) \) qui pointaient vers des noeuds de \( {$V_G$}~\setminus~m({$V_L$}) \) à des noeuds de \(n({$V_R$}) \) vers des neouds de \( {$V_H$}~\setminus~n({$V_R$}) \).
+  La fonction $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({$V_L$}) \)
+  qui pointaient vers des noeuds de \( {$V_G$}~\setminus~m({$V_L$}) \) à des noeuds de \(n({$V_R$}) \) vers des noeuds de \( {$V_H$}~\setminus~n({$V_R$}) \).
 
-  \begin{myfig}{sousGraph}{$\underset{out}{Emb} ~ et ~ $\underset{out}{Emb}}
+  \begin{myfig}{sousgraphe}{$\underset{out}{Emb} ~ et ~ $\underset{out}{Emb}}
     \tikzset{>=latex}
     \begin{tikzpicture}
       \node[] at (1,5) {L};
@@ -401,13 +406,13 @@ title=\lstname                   % show the filename of files included with \lst
       \node[] at (2,4) {V};
 
       \draw[->] (5,4) -- +(1,0);
-      \draw[->] (2,3) -- +(0,-1) node[anchor=south] {m};
+      \draw[->] (2,3) -- +(0,-1) node[anchor=west] {m};
 
       \node[] at (8,5) {R};
       \draw (9,4) ellipse (1cm and 0.5cm);
       \node[] at (9,4) {W};
 
-      \draw[->] (9,3) -- +(0,-1) node[anchor=south] {n};
+      \draw[->] (9,3) -- +(0,-1) node[anchor=west] {n};
 
       \node[] at (0,1) {G};
       \draw (2,0) ellipse (2cm and 1cm);
@@ -451,16 +456,16 @@ title=\lstname                   % show the filename of files included with \lst
   \end{myfig}
 
   \subsection{Précondition de refactoring}
-  Les préconditions servent à définir un sous graph ou un ensemble de sous graph ne pouvant pas être présent avant d'appliquer le refactoring.
-  Nous pourrions également employer des postconditions pour interdire certains sous graphs dans le graph résultat
-  mais les préconditions sont plus adaptées car on évite d'appliquer des transformations sur un graph et ensuite seulement de détecter les erreurs.
+  Les préconditions servent à définir un sous graphe ou un ensemble de sous graphe ne pouvant pas être présent avant d'appliquer le refactoring.
+  Nous pourrions également employer des postconditions pour interdire certains sous graphes dans le graphe résultat
+  mais les préconditions sont plus adaptées car on évite d'appliquer des transformations sur un graphe et ensuite seulement de détecter les erreurs.
 
   \begin{myfig}{NACPullUpMethod}{NAC}
     \includegraphics[width=\textwidth]{NACPullUpMethod.png}
   \end{myfig}
 
-  La figure~\ref{NACPullUpMethod}, représente les deux préconditions nécessaire pour pouvoir appliquer le refactoring PullUpMethod.
-  Elle spécifie que aucuns ancêtres ni descendants de la classe ne peut posséder cette méthode avant le refactoring.
+  La figure~\ref{NACPullUpMethod}, représente les deux préconditions nécessaires pour pouvoir appliquer le refactoring PullUpMethod.
+  Elle spécifie qu'aucun ancêtre ni descendant de la classe ne peut posséder cette méthode avant le refactoring.
 
 
   \section{Application sur le programme transport}
@@ -468,7 +473,7 @@ title=\lstname                   % show the filename of files included with \lst
   \subsection{Encapsulate Variable}
 
   Encapsuler une variable dans une classe est une opération souvent éffectué par les programmeurs.
-  Elle consiste à rendre une variable avec une visibilité public en variable avec une visibilité privée.
+  Elle consiste à transformer une variable publique en variable privée.
   Et à ajouter un accesseur public et un setter public pour continuer à accéder et à mettre à jour cette variable.
 
   Lors d'un refactoring cela consiste à changer la visibilité de la variable et à créer deux nouvelles méthodes.
@@ -484,14 +489,15 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsubsection{Contraintes}
 
+  Les contraintes de la figure~\ref{contraintes} sont préservées:
   \begin{enumerate}
-    \item est préservée car on ne crée ni ne bougeons aucune variable.
-    \item est préservée car la condition stipule qu'il ne faut pas que des méthodes comportant les mêmes définitions que le getter ou le setter soient présentes.
-    \item est préservée car on crée deux méthodes accédant à une variable dans la même classe.
-    \item est préservée car le paramètre de la méthode setter est employée uniquement dans la définition de cette méthode.
+    La contraite \item est préservée car on ne crée ni ne déplace aucune variable.
+    La contraite \item est préservée car la condition stipule qu'il ne faut pas que des méthodes comportant les mêmes définitions que le getter ou le setter soient présentes.
+    La contraite \item est préservée car on crée deux méthodes accédant à une variable dans la même classe.
+    La contraite \item est préservée car le paramètre de la méthode setter est employée uniquement dans la définition de cette méthode.
   \end{enumerate}
 
-  \subsubsection{Avant}
+  \subsubsection{Code source avant le refactoring}
 
   \begin{lstlisting}[frame=single]
     public class Person {
@@ -499,7 +505,7 @@ title=\lstname                   % show the filename of files included with \lst
     }
   \end{lstlisting}
 
-  \subsubsection{Après}
+  \subsubsection{Code source après le refactoring}
 
   \begin{lstlisting}[frame=single]
     public class Person {
@@ -521,18 +527,18 @@ title=\lstname                   % show the filename of files included with \lst
     \includegraphics[width=\textwidth]{beforeEncapsulateVariable.png}
   \end{myfig}
 
-  Dans le haut de la figure~\ref{beforeEncapsulateVariable} se trouve la LHS qui représente le sous graph du programme à transformer.
-  A droite, nous avons RHS qui représente la structure de ce sous graph après la transformation.
-  Et en dessous nous avons le graphique du programme.
+  Dans le haut de la figure~\ref{beforeEncapsulateVariable} se trouve la LHS qui représente le sous graphe du programme à transformer.
+  A droite, nous avons RHS qui représente la structure de ce sous graphe après la transformation.
+  Et en dessous nous avons le grapheique du programme.
 
   \begin{myfig}{afterEncapsulateVariable}{After Encapsulate Variable}
     \includegraphics[width=\textwidth]{afterEncapsulateVariable.png}
   \end{myfig}
 
-  Ici dans la figure~\ref{afterEncapsulateVariable}, la partie inférieure a changé.
-  Elle représente le graphique après l'application de la/les transformations. On peut voir que de nouveaux noeuds et de nouvelles arêtes ont été créés pour représenter les deux nouvelles méthodes.
+  Dans la figure~\ref{afterEncapsulateVariable}, la partie inférieure a changé.
+  Elle représente le grapheique après l'application de la/les transformation(s). On peut voir que de nouveaux noeuds et de nouvelles arêtes ont été créés pour représenter les deux nouvelles méthodes.
 
-  Je n'ai laissé que la transformation du sous graph lié à la variable "driver" pour une meilleure visibilité.
+  Je n'ai laissé que la transformation du sous graphe lié à la variable "driver" pour une meilleure visibilité.
 
   \subsection{Pull Up Method}
 
@@ -547,14 +553,15 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsubsection{Contraintes}
 
+  Les contraintes de la figure~\ref{contraintes} sont préservées:
   \begin{enumerate}
-    \item est préservée car on ne crée ni ne bougeons aucune variable.
-    \item est préservée grâce à la précondition qui stipule qu'il ne peut pas se trouver une méthode avec la même signature dans la classe parent.
-    \item est préservée grâce à la précondition qui stipule que la définition de la méthode bougée ne doit pas accéder à des variables en dehors du scope du parent.
-    \item est préservée car on ne crée ni ne modifie aucune méthode.
+    La contrainte \item est préservée car on ne crée ni ne déplace aucune variable.
+    La contrainte \item est préservée grâce à la précondition qui stipule qu'il ne peut pas se trouver une méthode avec la même signature dans la classe parent.
+    La contrainte \item est préservée grâce à la précondition qui stipule que la définition de la méthode déplacée ne doit pas accéder à des variables en dehors du scope du parent.
+    La contrainte \item est préservée car on ne crée ni ne modifie aucune méthode.
   \end{enumerate}
 
-  \subsubsection{Avant}
+  \subsubsection{Code source avant le refactoring}
   \begin{lstlisting}[frame=single]
     public class Vehicule {
     public String name;
@@ -577,7 +584,7 @@ title=\lstname                   % show the filename of files included with \lst
     }
   \end{lstlisting}
 
-  \subsubsection{Après}
+  \subsubsection{Code source après le refactoring}
   \begin{lstlisting}[frame=single]
     public class Vehicule {
     public String name;
@@ -608,9 +615,9 @@ title=\lstname                   % show the filename of files included with \lst
     \includegraphics[width=\textwidth]{beforePullUpMethode.png}
   \end{myfig}
 
-  En haut à gauche de la figure~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure du sous graph à transformer.
-  En haut à droite de la figure~\ref{beforePullUpMethode} se trouve la RHS qui représente la structure de ce sous graph après la transformation.
-  En dessous, nous avons le graphique du programme.
+  En haut à gauche de la figure~\ref{beforePullUpMethode} se trouve la LHS qui représente la structure du sous graphe à transformer.
+  En haut à droite de la figure~\ref{beforePullUpMethode} se trouve la RHS qui représente la structure de ce sous graphe après la transformation.
+  En dessous, nous avons le grapheique du programme.
 
   \begin{myfig}{afterPullUpMethod}{After PullUp Methode}
     \includegraphics[width=\textwidth]{afterPullUpMethod.png}
@@ -622,9 +629,9 @@ title=\lstname                   % show the filename of files included with \lst
 
   \section{Préservation du comportement du programme}
 
-  Jusqu'ici nous avons défini des mécanismes permettant de refactorer un programme à l'aide de graph.Il nous reste encore à prouver que ce programme conserve son comportement à la suite de ces transformations.
+  Jusqu'ici nous avons défini des mécanismes permettant de refactorer un programme à l'aide de graphe. Il nous reste encore à prouver que ce programme conserve son comportement à la suite de ces transformations.
 
-  Le but de cette partie est de démontrer que certaines propriétés du programme sont préservées après un refactoring:
+  Le but de cette partie est donc de démontrer que certaines propriétés du programme sont préservées après un refactoring:
   \begin{itemize}[label=\textbullet]
     \item l'accès aux variables
     \item la mise à jour de variables
@@ -633,50 +640,49 @@ title=\lstname                   % show the filename of files included with \lst
 
   Pour cela, nous avons besoin d'introduire le concept d'une fonction de tracking appelée, \(tr\).
 
-  \subsection{Définition, Préservation d'une expression de graph}
+  \subsection{Définition, préservation d'une expression de graphe}
 
-  \(GE\) étant un graph d'expression, \(G\) et \(H\) étant des graphs de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\)
-  est un mappage de noeuds tels que pour chaque occurrence \( oc \) de GE dans G, La composition de fonction  \(tr \circ oc \) est une occurrence de GE dans H.
+  \(GE\) étant un graphe d'expression, \(G\) et \(H\) étant des graphes de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\)
+  est un mappage de noeuds tels que pour chaque occurrence \( oc \) de $GE$ dans $G$, la composition de fonction  \(tr \circ oc \) est une occurrence de $GE$ dans $H$.
 
-  Pour chaque production de graph, une fonction tr existe et mappe les noeuds de LHS dans ceux de RHS.
+  Pour chaque production de graphe, une fonction $tr$ existe et mappe les noeuds de LHS dans ceux de RHS.
 
-  \subsection{Définition, Fonction de tracking}
-  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,$\underset{in}{Emb}$ ,$\underset{out}{Emb}$ ) \) via m et n, alors la fonction de tracking tr : \( {$V_G$} \rightarrow {$V_H$} \) est définie comme suit :
+  \subsection{Fonction de tracking}
 
-  tr(v) = { \(n \circ trp \circ m-1(v)\) , si v est une node de \(m(L)\) \\ v, si v n'est pas une node de \(m(L)\)
-
-  \[tr(v) = \left\{
+  \subsubsection{Définition}
+  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,$\underset{in}{Emb}$ ,$\underset{out}{Emb}$ ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
+  \[$tr(v)$ = \left\{
   \begin{array}{lr}
     \( n \circ trp \circ m^{-1}(v) \) : si v est une node de m(L)\\
-    \(v \) : si v n'est pas une node de m(L)
+    \( v \) : si v n'est pas une node de m(L)
   \end{array}
   \right.
   \]
 
   Cette définition mathématique définit :
   \begin{itemize}[label=\textbullet]
-    \item Pour tout noeud contenu dans \( {$V_L$} \) , la fonction \(m^{-1}(v)\) va chercher le noeud dans {$V_G$} et le mappe dans \( L \) ensuite la fonction de tracking mappe le noeud de  \( L \)
-    dans  \( R \)  et enfin la fonction \( n \) mappe le noeud de  \( R \)  dans {$V_H$}.
-    \item Pour tous les autres noeuds, il ne faut rien faire.
+    \item Pour tous noeuds contenus dans \( {$V_L$} \) , la fonction \(m^{-1}(v)\) va chercher le noeud dans {$V_G$} et le mappe dans \( L \). Ensuite la fonction de tracking mappe le noeud de  \( L \)
+    dans  $R$  et enfin la fonction \( n \) mappe le noeud de  \( R \)  dans {$V_H$}.
+    \item Pour tous les autres noeuds, aucune manipulation particulière n'est requise.
   \end{itemize}
 
   \subsection{Préservation du comportement : Encapsulate Variable}
 
-  \subsubsection{Production et table de correspondance}
+  \subsubsection{Production}
 
   \begin{myfig}{embedding}{méchanisme "embedding"}
     \begin{center}
       \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
         thick, label distance=-1mm, label position=45, every label/.style={red}]
 
-        \node [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] at (0,0)  (varLeft) {var V};
+        \node [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] at (0,1)  (varLeft) {var V};
 
         \draw[red, arrows={-Triangle[angle=90:10pt,red,fill=black]}]  (1,1) -- (3,1);
         \node[red] at (2,0.5) {P1};
 
         \node (rect) at (4,2) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=3] (setter) {Setter M};
         \node (rect) at (4,0) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=4] (getter) {Getter M};
-        \node (rect) at (6,0) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] (varRight) {var V};
+        \node (rect) at (6,1) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] (varRight) {var V};
 
       \end{tikzpicture}
     \end{center}
@@ -721,7 +727,7 @@ title=\lstname                   % show the filename of files included with \lst
     \end{tabular}
   \end{myfig}
 
-  Sur la figure~\ref{embedding} on peut faire différentes observations grâce aux graphs et égalemment à la table :
+  Sur la figure~\ref{embedding} on peut faire différentes observations grâce aux graphes et égalemment à la table :
 
   \begin{itemize}[label=\textbullet]
     \item Les noeuds ayant les mêmes numéros sont des noeuds conservés entre les productions.
@@ -732,7 +738,7 @@ title=\lstname                   % show the filename of files included with \lst
     \item Les nouvelles définitions de méthodes appartiennent à la même classe que la définition de variable
   \end{itemize}
 
-  Afin de montrer que l'approche est correcte pour le refactoring Encapsulate Variable il faut prouver:
+  Afin de montrer que l'approche est correcte pour le refactoring de type Encapsulate Variable il faut prouver:
 
   \begin{enumerate}
     \item La préservation de l'accès à la variable
@@ -741,10 +747,10 @@ title=\lstname                   % show the filename of files included with \lst
 
   Je ferai la preuve uniquement pour la préservation de l'accès à une variable car la préservation de la mise à jour est identique.
 
-  Le graph d'expression  \(MD \underset{e * a}{\rightarrow} V \underset{l}{\rightarrow}  VD\) représente toutes les possibilités d'accès possible à une variable depuis une définition de méthode.
+  Le graphe d'expression  \(MD \underset{e * a}{\rightarrow} V \underset{l}{\rightarrow}  VD\) représente toutes les possibilités d'accès possible à une variable depuis une définition de méthode.
 
   Garantir la préservation de l'accès consite à prouver que pour chaque occurrence de \(MD \underset{e * a}{\rightarrow} V \underset{l}{\rightarrow} VD\)
-  dans le graph initial, il y a une occurrence correspondante dans le graph resultat.
+  dans le graphe initial, il y a une occurrence correspondante dans le graphe resultat.
 
   Pour cela je vais prouver que les productions P1 et P2 préservent les propriétés \(GE1 = MD \underset{e * a}{\rightarrow} V \) et  \(GE2 = V \underset{l}{\rightarrow}  VD\).
 
@@ -768,7 +774,7 @@ title=\lstname                   % show the filename of files included with \lst
   \begin{enumerate}
     \item
 
-    Pour la production P1. $G$ et $H$ étant des graphs et $G$ dérivant $H$ en fonction de $P1$ via $m$ et $n$, et tr étant la fonction de tracking. oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de  {$GE_1$} dans $G$.
+    Pour la production P1. $G$ et $H$ étant des graphes et $G$ dérivant $H$ en fonction de $P1$ via $m$ et $n$, et $tr$ étant la fonction de tracking. oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de  {$GE_1$} dans $G$.
     Si il existe un chemin \( v_0 \underset{e}{\rightarrow} v_1 \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} v_n \) dans $G$
     ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de $V_{GE1}$
     alors il doit exister un chemin \( tr(v_0) \underset{e}{\rightarrow} tr(v_1) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1}) \underset{a}{\rightarrow} tr({v_n}) \) dans $H$.
@@ -777,22 +783,24 @@ title=\lstname                   % show the filename of files included with \lst
       ils sont tous de type E et ne sont donc pas contenus dans la partie remplacée $m(L)$ de $G$.
       Les noeuds sont remappés tel quel dans $H$ et il existe donc un chemin $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1})$ dans $H$.
 
-      \item Deuxiemement pour le noeud $v_0$ de type MD n'est pas contenu dans $m(L)$, $tr(v_0) = v_0$ et donc $tr(v_0) \underset{e}{\rightarrow} tr(v_1)$ est conservé dans $H$.
+      \item Deuxiemement le noeud $v_0$ de type MD n'est pas contenu dans $m(L)$, $tr(v_0) = v_0$ et donc $tr(v_0) \underset{e}{\rightarrow} tr(v_1)$ est conservé dans $H$.
 
-      \item Finalement pour le noeud {$v_n$} si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
-      Si par contre $v_n$ est contenu dans $m(L)$ alors $v_n$ correspond au noeud 1 dans L et $tr(v_n)$ au noeud 1 dans la RHS de P1.
+      \item Finalement pour le noeud {$v_n$}
+      \begin{itemize}
+      \item Si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      \item Si par contre $v_n$ est contenu dans $m(L)$ alors $v_n$ correspond au noeud 1 dans L et $tr(v_n)$ au noeud 1 dans la RHS de P1.
+
       Vu que ((a,1),(a,1))~\in~$Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+
       Vu que ((l,1),(l,1))~\in~$Emb_{out}$ la variable garde sa définition de variable.
+
       Vu que ((t,1),(t,1)) et ((t,1),(1.p,2)) et ((t,1),(t,3)) \in $Emb_{out}$ la variable garde le même type, le getter retourne le type de la variable et le paramètre du setter est
       du même type que la variable.
-
-      \item On peut déduire que GE1 est préservée par P1
+    \end{itemize}
+    \item On peut déduire que GE1 est préservée par P1
     \end{itemize}
 
-    \item
-
-
-    Pour la production P2. $G$ et $H$ étant des graphs et $G$ derivant $H$ en fonction de $P2$ via $m$ et $n$, et $tr$ étant la fonction de tracking.
+    \item Pour la production P2. $G$ et $H$ étant des graphes et $G$ derivant $H$ en fonction de $P2$ via $m$ et $n$, et $tr$ étant la fonction de tracking.
     oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurrence de {$GE_1$} dans $G$.
     Si il existe un chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {$v_n$} \) dans $G$
     ou {$v_0$} est la node 1 de $V_{GE1}$ et $v_n$ est la node 2 de $V_{GE1}$
@@ -804,11 +812,15 @@ title=\lstname                   % show the filename of files included with \lst
 
       \item Deuxiemement pour le noeud {$v_0$} de type MD n'est pas pas contenu dans $m(L)$, tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}) est conservé dans $H$.
 
-      \item  Finalement pour le noeud {$v_n$} si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
-      Si par contre {$v_n$} est contenu dans $m(L)$ alors {$v_n$} correspond au noeud 1 dans L et tr($v_n$) au noeud 1 dans la RHS de P1.
-      Vu que ((a,1),(c,3)) \in $Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$ car l'expression appellera le getter qui lui retournera la valeur de la variable.
-      Vu que ((m,0),(m,4)) et ((m,0),(m,5)) \in $Emb_{out}$ on peut garantir que les méthodes seront accessibles par $v_{n-1}$ car elles appartiendront à la même classe que la variable $v_n$.
+      \item  Finalement pour le noeud {$v_n$}
+      \begin{itemize}
+      \item Si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      \item Si par contre {$v_n$} est contenu dans $m(L)$ alors {$v_n$} correspond au noeud 1 dans L et tr($v_n$) au noeud 1 dans la RHS de P1.
 
+      Vu que ((a,1),(c,3)) \in $Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$ car l'expression appellera le getter qui lui retournera la valeur de la variable.
+
+      Vu que ((m,0),(m,4)) et ((m,0),(m,5))~\in~$Emb_{out}$ on peut garantir que les méthodes seront accessibles par $v_{n-1}$ car elles appartiendront à la même classe que la variable $v_n$.
+      \end{itemize}
       \item On peut deduire que GE1 est preservée par P2
     \end{itemize}
 
@@ -817,31 +829,31 @@ title=\lstname                   % show the filename of files included with \lst
   \section{Conclusion}
 
   Le but de cet article était de prouver que le refactoring n'altérait pas le comportement d'un programme.
-  A cet effet, il fallait créer un modèle simple et compatible avec les outils de refactoring actuels. Nous avons donc choisi de représenter le code source des programmes sous forme de graph
-  et les transformations effectuées sur ce code source lors d'un refactoring sous forme de transformations de graph.
-  Puis, nous avons ajouté des contraintes à ces graphs de programme à l'aide d'un graph de type et d'autres mécanismes.
+  A cet effet, il fallait créer un modèle simple et compatible avec les outils de refactoring actuels. Nous avons donc choisi de représenter le code source des programmes sous forme de graphe
+  et les transformations effectuées sur ce code source lors d'un refactoring sous forme de transformations de graphe.
+  Puis, nous avons ajouté des contraintes à ces graphes de programme à l'aide d'un graphe de type et d'autres mécanismes.
 
-  Finalement, il nous a fallu prouver la conservation de certaines propriétés dans ces graphs après les transformations.
+  Finalement, il nous a fallu prouver la conservation de certaines propriétés dans ces graphes après l'application de transformations.
 
   Malgré cela, certains problèmes ont persistés et nous ont amené à faire des ajouts et des compromis sur ce modèle:
 
   \begin{itemize}[label=\textbullet]
-    \item Concernant les Préconditions, certaines contraintes ont été mises de côté. Par exemple pour le refactoring PullUpMethod, on ne contrôlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
+    \item Concernant les préconditions, certaines contraintes ont été mises de côté. Par exemple pour le refactoring PullUpMethod, on ne contrôlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
 
-    \item Concernant la représentation en graph, dans le but de supporter un large éventail de langage nous avons ajouté la possibilité d'attacher des attribus supplémentaires aux noeuds.
+    \item Concernant la représentation en graphe, dans le but de supporter un large éventail de langage nous avons ajouté la possibilité d'attacher des attribus supplémentaires aux noeuds.
 
-    \item Concernant le graph de type, toutes les contraites n'étaient pas représentables à l'aide de ce graph de type, nous avons donc introduit les graphs d'expressions.
+    \item Concernant le graphe de type, toutes les contraintes n'étaient pas représentables à l'aide de ce graphe de type, nous avons donc introduit les graphes d'expressions.
 
-    \item Concernant les transformations de graph, tout les types de refactoring ne pouvant pas être représenté à l'aide d'une seule transformation, nous avons permis de diviser un refactoring en une sucession de plusieurs transformations
+    \item Concernant les transformations de graphe, tout les types de refactoring ne peuvent pas être représenté à l'aide d'une seule transformation.
+    Dés lors ils ont été représentés en une succession de plusieurs tranformations.
 
     \item Concernant la préservation du comportement, un concept de fonction de traquing a été employé pour permettre de traquer un noeud avant et après une transformation.
   \end{itemize}
 
   Il est difficile de dire si cette approche formelle peut réellement servir dans une approche pratique et être utilisée par un outil de refactoring.
-  De plus bien que ce modèle soit relativement simple, il nécessite une bonne connaissance des graphs mathématiques.
+  De plus bien que ce modèle soit relativement simple, il nécessite une bonne connaissance des graphes mathématiques.
 
-  Toutefois, l'approche utilisée reste efficace pour définir l'effet de chaque refactoring sur le code source d'un programme.
-  Et, grâce à des outils comme AGG~\cite{aggSite} on peut la visualiser ce est un plus pour la compréhension.
+  Toutefois, l'approche utilisée reste efficace pour définir l'effet que chaque refactoring a sur le code source d'un programme.
 
   \newpage
 
@@ -853,7 +865,7 @@ title=\lstname                   % show the filename of files included with \lst
 
     \bibitem{mainArticle}
     Tom Mens, Niels Van Eetvelde, Serge Demeyer and Dirk Janssens,
-    Formalizing Refactorings with Graph Transformations.
+    Formalizing Refactorings with graphe Transformations.
 
     \bibitem{secondArticle}
     Tom Mens and Tom Tourwe ,
@@ -869,16 +881,16 @@ title=\lstname                   % show the filename of files included with \lst
 
     \bibitem{aggHelp}
     Gabriele Taentzer,
-    AGG: A Tool Environment for Algebraic Graph Transformation.
+    AGG: A Tool Environment for Algebraic graphe Transformation.
 
     \bibitem{refactoring}
     Martin Fowler (with Kent Beck, John Brant, William Opdyke, and Don Roberts),
     Refactoring Improving the Design of Existing Code.
 
-    \bibitem{wikiGraph}
-    \url{http://fr.wikipedia.org/wiki/Lexique_de_la_th%C3%A9orie_des_graphes}
+    \bibitem{wikigraphe}
+    \url{http://fr.wikipedia.org/wiki/Lexique_de_la_th%C3%A9orie_des_graphees}
 
-    \bibitem{latexGraph}
+    \bibitem{latexgraphe}
     \url{http://texdoc.net/texmf-dist/doc/generic/pgf/pgfmanual.pdf}
 
     \bibitem{aggSite}
@@ -887,6 +899,6 @@ title=\lstname                   % show the filename of files included with \lst
     \bibitem{latexSymboles}
     \url{http://fr.wikipedia.org/wiki/Table_des_symboles_math%C3%A9matiques}
 
-  \end{thebibliography}
+  \end{thebibliographey}
 
 \end{document}
