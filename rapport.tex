@@ -394,10 +394,10 @@ title=\lstname                   % show the filename of files included with \lst
   La fonction $Emb_{in}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {V_G}~\setminus~m({V_L}) \)
   qui pointaient vers des noeuds contenus dans \( m({V_L}) \) à des arêtes d'un noeuds de \( {V_H} \setminus n({V_R}) \) à un noeuds de \( n({V_R}) \).
 
-  La fonction $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({V_L}) \)
+  La fonction $Emb_{out}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({V_L}) \)
   qui pointaient vers des noeuds de \( {V_G}~\setminus~m({V_L}) \) à des noeuds de \(n({V_R}) \) vers des noeuds de \( {V_H}~\setminus~n({V_R}) \).
 
-  \begin{myfig}{sousgraphe}{$\underset{out}{Emb}$ et $\underset{out}{Emb}$}
+  \begin{myfig}{sousgraphe}{$Emb_{out}$ et $Emb_{out}$}
     \tikzset{>=latex}
     \begin{tikzpicture}
       \node[] at (1,5) {L};
@@ -651,7 +651,7 @@ title=\lstname                   % show the filename of files included with \lst
   \subsection{Fonction de tracking}
 
   \subsubsection{Définition}
-  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,Emb_{in} ,\underset{out}{Emb} ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
+  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,Emb_{in} ,Emb_{out} ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
   \[ tr(v) =
   \begin{cases}
     n \circ trp \circ m^{-1}(v) & \text{si }v\text{ est une node de }m(L)\\
