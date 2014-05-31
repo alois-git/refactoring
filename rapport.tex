@@ -319,7 +319,6 @@ title=\lstname                   % show the filename of files included with \lst
     Par exemple, si elles accédaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter).
     Ces arêtes ne sont normalement pas autorisées mais les éviter serait trop complexe car nous aurions besoin de créer des ensembles LHS et RHS infinits.
     Pour pallier à ce problème, on emploie un mécanisme appelé ``embedding mechanism'' qui autorise ces arêtes orphelines et qui précisera comment les rediriger vers un autre noeud.
-
   \end{enumerate}
 
   \subsubsection{Règles de transformation}
@@ -389,7 +388,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   \(m(v)\) est un sous graphe de \(G\) et \(n(w)\) est un sous graphe de H.
 
-  {$V_H$} est égal au graphe \(({V_G} \setminus m({V_L})) \cup n({V_R})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
+  $V_H$ est égal au graphe \(({V_G} \setminus m({V_L})) \cup n({V_R})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
 
   La fonction $Emb_{in}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {V_G}~\setminus~m({V_L}) \)
   qui pointaient vers des noeuds contenus dans \( m({V_L}) \) à des arêtes d'un noeuds de \( {V_H} \setminus n({V_R}) \) à un noeuds de \( n({V_R}) \).
@@ -776,7 +775,7 @@ title=\lstname                   % show the filename of files included with \lst
 
     Pour la production P1. $G$ et $H$ étant des graphes et $G$ dérivant $H$ en fonction de $P1$ via $m$ et $n$, et $tr$ étant la fonction de tracking. oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de  {$GE_1$} dans $G$.
     Si il existe un chemin \( v_0 \underset{e}{\rightarrow} v_1 \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} v_n \) dans $G$
-    ou {$v_0$} est la node 1 de {$V_{GE1}$} et {$v_n$} est la node 2 de $V_{GE1}$
+    ou $v_0$ est la node 1 de $V_{GE1}$ et {$v_n$} est la node 2 de $V_{GE1}$
     alors il doit exister un chemin \( tr(v_0) \underset{e}{\rightarrow} tr(v_1) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1}) \underset{a}{\rightarrow} tr({v_n}) \) dans $H$.
     \begin{itemize}[label=\textbullet]
       \item Premièrement considérons les noeuds $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1})$,
@@ -801,9 +800,9 @@ title=\lstname                   % show the filename of files included with \lst
     \end{itemize}
 
     \item Pour la production P2. $G$ et $H$ étant des graphes et $G$ derivant $H$ en fonction de $P2$ via $m$ et $n$, et $tr$ étant la fonction de tracking.
-    oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de {$GE_1$} dans $G$.
+    oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de $GE_1$ dans $G$.
     Si il existe un chemin \( {v_0} \underset{e}{\rightarrow} {v_1} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {v_n} \) dans $G$
-    ou {$v_0$} est la node 1 de $V_{GE1}$ et $v_n$ est la node 2 de $V_{GE1}$
+    ou $v_0$ est la node 1 de $V_{GE1}$ et $v_n$ est la node 2 de $V_{GE1}$
     alors il doit exister un chemin \( tr(v_0) \underset{e}{\rightarrow} tr(v_1) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1}) \underset{a}{\rightarrow} tr({v_n}) \) dans $H$.
     \begin{itemize}[label=\textbullet]
       \item Premièrement considérons les noeuds $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_n-1)$,
