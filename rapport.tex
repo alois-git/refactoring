@@ -157,14 +157,14 @@ title=\lstname                   % show the filename of files included with \lst
   \subsubsection{Type d'arêtes}
   \begin{tabular}{ | l | l |  l |}
     \hline type & application & description  \\ \hline
-    l : & M -> MD & \\ & V -> VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline
-    i : & C -> C &  héritage d'une classe à une autre  \\ \hline
-    m : & VD -> C & \\ & MD -> C & appartenance d'une variable ou d'une méthode à une classe  \\ \hline
-    t : & V -> C  & \\ &  M -> C & type d'une variable ou type de retour d'un méthode   \\ \hline
-    p : & MD -> P  & \\ &  P -> C & définition d'un paramètre ou de son type     \\ \hline
-    e : & E -> M & expression contenue dans une définition de méthode ou \\ & &  dans une autre expression    \\ \hline
-    a : & E -> {V|P} & accès à une variable ou à un paramètre    \\ \hline
-    u : & E -> {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
+    l : & M $\rightarrow$ MD & \\ & V $\rightarrow$ VD & lookup d'une variable ou d'une méthode à sa définition \\ \hline
+    i : & C $\rightarrow$ C &  héritage d'une classe à une autre  \\ \hline
+    m : & VD $\rightarrow$ C & \\ & MD $\rightarrow$ C & appartenance d'une variable ou d'une méthode à une classe  \\ \hline
+    t : & V $\rightarrow$ C  & \\ &  M $\rightarrow$ C & type d'une variable ou type de retour d'un méthode   \\ \hline
+    p : & MD $\rightarrow$ P  & \\ &  P $\rightarrow$ C & définition d'un paramètre ou de son type     \\ \hline
+    e : & E $\rightarrow$ M & expression contenue dans une définition de méthode ou \\ & &  dans une autre expression    \\ \hline
+    a : & E $\rightarrow$ {V|P} & accès à une variable ou à un paramètre    \\ \hline
+    u : & E $\rightarrow$ {V|P} & mise à jour d'une variable ou d'un paramètre    \\ \hline
   \end{tabular}
 
   La figure~\ref{typegraphe} est un exemple de graphe de type, on peut observer toutes les relations possibles entre les noeuds typés et les arêtes typées.
@@ -318,7 +318,7 @@ title=\lstname                   % show the filename of files included with \lst
     \item Il est possible que certaines arêtes ne pointent plus vers un noeud suite a l'application d'un refactoring.
     Par exemple, si elles accédaient à une variable qui est maintenant uniquement accessible par des méthodes (getter ou setter).
     Ces arêtes ne sont normalement pas autorisées mais les éviter serait trop complexe car nous aurions besoin de créer des ensembles LHS et RHS infinits.
-    Pour pallier à ce problème, on emploie un mécanisme appelé "embedding mechanism" qui autorise ces arêtes orphelines et qui précisera comment les rediriger vers un autre noeud.
+    Pour pallier à ce problème, on emploie un mécanisme appelé ``embedding mechanism'' qui autorise ces arêtes orphelines et qui précisera comment les rediriger vers un autre noeud.
 
   \end{enumerate}
 
@@ -389,15 +389,15 @@ title=\lstname                   % show the filename of files included with \lst
 
   \(m(v)\) est un sous graphe de \(G\) et \(n(w)\) est un sous graphe de H.
 
-  {$V_H$} est égal au graphe \({$V_G$} \setminus~m({$V_L$})~\cup~n({$V_R$})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
+  {$V_H$} est égal au graphe \(({V_G} \setminus m({V_L})) \cup n({V_R})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
 
-  La fonction $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {$V_G$}~\setminus~m({$V_L$}) \)
-  qui pointaient vers des noeuds contenus dans \( m({$V_L$}) \) à des arêtes d'un noeuds de \( {$V_H$} \setminus n({$V_R$}) \) à un noeuds de \( n({$V_R$}) \).
+  La fonction $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {V_G}~\setminus~m({V_L}) \)
+  qui pointaient vers des noeuds contenus dans \( m({V_L}) \) à des arêtes d'un noeuds de \( {V_H} \setminus n({V_R}) \) à un noeuds de \( n({V_R}) \).
 
-  La fonction $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({$V_L$}) \)
-  qui pointaient vers des noeuds de \( {$V_G$}~\setminus~m({$V_L$}) \) à des noeuds de \(n({$V_R$}) \) vers des noeuds de \( {$V_H$}~\setminus~n({$V_R$}) \).
+  La fonction $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({V_L}) \)
+  qui pointaient vers des noeuds de \( {V_G}~\setminus~m({V_L}) \) à des noeuds de \(n({V_R}) \) vers des noeuds de \( {V_H}~\setminus~n({V_R}) \).
 
-  \begin{myfig}{sousgraphe}{$\underset{out}{Emb} ~ et ~ $\underset{out}{Emb}}
+  \begin{myfig}{sousgraphe}{$\underset{out}{Emb}$ et $\underset{out}{Emb}$}
     \tikzset{>=latex}
     \begin{tikzpicture}
       \node[] at (1,5) {L};
@@ -537,7 +537,7 @@ title=\lstname                   % show the filename of files included with \lst
   Dans la figure~\ref{afterEncapsulateVariable}, la partie inférieure a changé.
   Elle représente le grapheique après l'application de la/les transformation(s). On peut voir que de nouveaux noeuds et de nouvelles arêtes ont été créés pour représenter les deux nouvelles méthodes.
 
-  Je n'ai laissé que la transformation du sous graphe lié à la variable "driver" pour une meilleure visibilité.
+  Je n'ai laissé que la transformation du sous graphe lié à la variable ``driver'' pour une meilleure visibilité.
 
 \clearpage
 
@@ -626,7 +626,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   Dans la figure~\ref{afterPullUpMethod} la partie du dessous a changé et représente le programme après avoir appliqué la transformation.
   Après avoir remonté la méthode de la classe ManualCar dans la classe Vehicule,
-  on peut observer que le lien de la méthode "changeGear" vers la classe ManualCar n'existe plus. Et qu'un nouveau lien a été créé vers la classe Vehicule.
+  on peut observer que le lien de la méthode ``changeGear'' vers la classe ManualCar n'existe plus. Et qu'un nouveau lien a été créé vers la classe Vehicule.
 
   \section{Préservation du comportement du programme}
 
@@ -643,7 +643,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsection{Définition, préservation d'une expression de graphe}
 
-  \(GE\) étant un graphe d'expression, \(G\) et \(H\) étant des graphes de programme. La fonction \(tr: {$V_G$} \rightarrow {$V_H$}\)
+  \(GE\) étant un graphe d'expression, \(G\) et \(H\) étant des graphes de programme. La fonction \(tr: {V_G} \rightarrow {V_H}\)
   est un mappage de noeuds tels que pour chaque occurrence \( oc \) de $GE$ dans $G$, la composition de fonction  \(tr \circ oc \) est une occurrence de $GE$ dans $H$.
 
   Pour chaque production de graphe, une fonction $tr$ existe et mappe les noeuds de LHS dans ceux de RHS.
@@ -651,18 +651,17 @@ title=\lstname                   % show the filename of files included with \lst
   \subsection{Fonction de tracking}
 
   \subsubsection{Définition}
-  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,$\underset{in}{Emb}$ ,$\underset{out}{Emb}$ ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
-  \[$tr(v)$ = \left\{
-  \begin{array}{lr}
-    \( n \circ trp \circ m^{-1}(v) \) : si v est une node de m(L)\\
-    \( v \) : si v n'est pas une node de m(L)
-  \end{array}
-  \right.
+  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,\underset{in}{Emb} ,\underset{out}{Emb} ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
+  \[ tr(v) =
+  \begin{cases}
+    n \circ trp \circ m^{-1}(v) & \text{si }v\text{ est une node de }m(L)\\
+    v & \text{si }v\text{ n'est pas une node de }m(L)
+  \end{cases}
   \]
 
   Cette définition mathématique définit :
   \begin{itemize}[label=\textbullet]
-    \item Pour tous noeuds contenus dans \( {$V_L$} \) , la fonction \(m^{-1}(v)\) va chercher le noeud dans {$V_G$} et le mappe dans \( L \). Ensuite la fonction de tracking mappe le noeud de  \( L \)
+    \item Pour tous noeuds contenus dans \( {V_L} \) , la fonction \(m^{-1}(v)\) va chercher le noeud dans {$V_G$} et le mappe dans \( L \). Ensuite la fonction de tracking mappe le noeud de  \( L \)
     dans  $R$  et enfin la fonction \( n \) mappe le noeud de  \( R \)  dans {$V_H$}.
     \item Pour tous les autres noeuds, aucune manipulation particulière n'est requise.
   \end{itemize}
@@ -671,7 +670,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   \subsubsection{Production}
 
-  \begin{myfig}{embedding}{méchanisme "embedding"}
+  \begin{myfig}{embedding}{méchanisme ``embedding''}
     \begin{center}
       \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
         thick, label distance=-1mm, label position=45, every label/.style={red}]
@@ -714,7 +713,7 @@ title=\lstname                   % show the filename of files included with \lst
         (mdGetter) edge node {a} (varRight)
         (mdSetter) edge node {u} (varRight)
         (varLeft) edge [left] node [right] {l} (vdLeft)
-        (varRight) edge [left] node [right] {l} (vdRight)
+        (varRight) edge [left] node [right] {l} (vdRight);
       \end{tikzpicture}
     \end{center}
 
@@ -722,9 +721,9 @@ title=\lstname                   % show the filename of files included with \lst
     \begin{tabular}{ | l | l |  l |}
       \hline production & arêtes entrantes & arêtes sortantes  \\ \hline
       P1 : & (\(a,1) {\rightarrow} (a,1)\) &  (\(t,1) {\rightarrow}(t,1),(1.p,2),(t,3)\)   \\ \hline
-      & (\(u,1) {\rightarrow} (u,1)\) & (\ (l,1) {\rightarrow} (l,1)\)  \\ \hline
-      P2 : & (\(a,1) {\rightarrow} (c,3)\) &  (\(m,0) {\rightarrow} (\(m,0),(m,4),(m,5)\)\)    \\ \hline
-      & (\(u,1) {\rightarrow} (c,2)\) &  (\(t,1) {\rightarrow} (t,1)\)  \\ \hline
+      & (\(u,1) {\rightarrow} (u,1)\) & \( (l,1) {\rightarrow} (l,1)\)  \\ \hline
+      P2 : & \((a,1) {\rightarrow} (c,3)\) &  \((m,0) {\rightarrow} ((m,0),(m,4),(m,5)\)    \\ \hline
+      & (\(u,1) {\rightarrow} (c,2)\) &  \((t,1) {\rightarrow} (t,1)\)  \\ \hline
     \end{tabular}
   \end{myfig}
 
@@ -766,7 +765,7 @@ title=\lstname                   % show the filename of files included with \lst
         \node at (2,0) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=2] (V) {V};
 
         \path[every node/.style={font=\sffamily\small}]
-        (MD) edge node {e * a} (V)
+        (MD) edge node {e * a} (V);
 
       \end{tikzpicture}
     \end{center}
@@ -789,21 +788,21 @@ title=\lstname                   % show the filename of files included with \lst
       \item Finalement pour le noeud {$v_n$}
       \begin{itemize}
       \item Si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
-      \item Si par contre $v_n$ est contenu dans $m(L)$ alors $v_n$ correspond au noeud 1 dans L et $tr(v_n)$ au noeud 1 dans la RHS de P1.
+      \item Si par contre $v_n$ est contenu dans $m(L)$ alors $v_n$ correspond au noeud 1 dans $L$ et $tr(v_n)$ au noeud 1 dans la RHS de P1.
 
-      Vu que ((a,1),(a,1))~\in~$Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
+      Vu que $((a,1),(a,1))~\in~Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
 
-      Vu que ((l,1),(l,1))~\in~$Emb_{out}$ la variable garde sa définition de variable.
+      Vu que $((l,1),(l,1))~\in~Emb_{out}$ la variable garde sa définition de variable.
 
-      Vu que ((t,1),(t,1)) et ((t,1),(1.p,2)) et ((t,1),(t,3)) \in $Emb_{out}$ la variable garde le même type, le getter retourne le type de la variable et le paramètre du setter est
+      Vu que $((t,1),(t,1))$ et $((t,1),(1.p,2))$ et $((t,1),(t,3)) \in Emb_{out}$ la variable garde le même type, le getter retourne le type de la variable et le paramètre du setter est
       du même type que la variable.
     \end{itemize}
     \item On peut déduire que GE1 est préservée par P1
     \end{itemize}
 
     \item Pour la production P2. $G$ et $H$ étant des graphes et $G$ derivant $H$ en fonction de $P2$ via $m$ et $n$, et $tr$ étant la fonction de tracking.
-    oc :  \( {$V_{GE1}$} {\rightarrow} {$V_G$} \) est une occurrence de {$GE_1$} dans $G$.
-    Si il existe un chemin \( {$v_0$} \underset{e}{\rightarrow} {$v_1$} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {$v_n$} \) dans $G$
+    oc :  \( {V_{GE1}} {\rightarrow} {V_G} \) est une occurrence de {$GE_1$} dans $G$.
+    Si il existe un chemin \( {v_0} \underset{e}{\rightarrow} {v_1} \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} v_{n-1} \underset{a}{\rightarrow} {v_n} \) dans $G$
     ou {$v_0$} est la node 1 de $V_{GE1}$ et $v_n$ est la node 2 de $V_{GE1}$
     alors il doit exister un chemin \( tr(v_0) \underset{e}{\rightarrow} tr(v_1) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_{n-1}) \underset{a}{\rightarrow} tr({v_n}) \) dans $H$.
     \begin{itemize}[label=\textbullet]
@@ -811,16 +810,16 @@ title=\lstname                   % show the filename of files included with \lst
       ils sont tous de type E et ne sont donc pas contenus dans la partie remplacée $m(L)$ de $G$.
       Les noeuds sont remappés tel quel dans $H$ et il existe donc un chemin $tr(v_1) \underset{e}{\rightarrow} tr(v_2) \underset{e}{\rightarrow} ... \underset{e}{\rightarrow} tr(v_n-1)$ dans $H$.
 
-      \item Deuxiemement pour le noeud {$v_0$} de type MD n'est pas pas contenu dans $m(L)$, tr({$v_0$}) = {$v_0$} et donc tr({$v_0$}) \underset{e}{\rightarrow} tr({$v_1$}) est conservé dans $H$.
+      \item Deuxiemement pour le noeud {$v_0$} de type MD n'est pas pas contenu dans $m(L)$, tr({$v_0$}) = {$v_0$} et donc $tr({v_0}) \underset{e}{\rightarrow} tr({v_1})$ est conservé dans $H$.
 
       \item  Finalement pour le noeud {$v_n$}
       \begin{itemize}
       \item Si il n'est pas contenu dans $m(L)$, $tr(v_n)= v_n$ et donc $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$.
-      \item Si par contre {$v_n$} est contenu dans $m(L)$ alors {$v_n$} correspond au noeud 1 dans L et tr($v_n$) au noeud 1 dans la RHS de P1.
+      \item Si par contre {$v_n$} est contenu dans $m(L)$ alors {$v_n$} correspond au noeud 1 dans $L$ et tr($v_n$) au noeud 1 dans la RHS de P1.
 
-      Vu que ((a,1),(c,3)) \in $Emb_{in}$, $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$ car l'expression appellera le getter qui lui retournera la valeur de la variable.
+      Vu que $((a,1),(c,3)) \in Emb_{in}$, le comportement de $tr(v_{n-1}) \underset{a}{\rightarrow} tr(v_n)$ est conservé dans $H$ car l'expression appellera le getter qui lui retournera la valeur de la variable.
 
-      Vu que ((m,0),(m,4)) et ((m,0),(m,5))~\in~$Emb_{out}$ on peut garantir que les méthodes seront accessibles par $v_{n-1}$ car elles appartiendront à la même classe que la variable $v_n$.
+      Vu que $((m,0),(m,4))$ et $((m,0),(m,5))~\in~Emb_{out}$ on peut garantir que les méthodes seront accessibles par $v_{n-1}$ car elles appartiendront à la même classe que la variable $v_n$.
       \end{itemize}
       \item On peut deduire que GE1 est preservée par P2
     \end{itemize}
@@ -900,6 +899,6 @@ title=\lstname                   % show the filename of files included with \lst
     \bibitem{latexSymboles}
     \url{http://fr.wikipedia.org/wiki/Table_des_symboles_math%C3%A9matiques}
 
-  \end{thebibliographey}
+  \end{thebibliography}
 
 \end{document}
