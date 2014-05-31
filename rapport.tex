@@ -391,7 +391,7 @@ title=\lstname                   % show the filename of files included with \lst
 
   {$V_H$} est égal au graphe \(({V_G} \setminus m({V_L})) \cup n({V_R})\). De facon très imagée on peut voir ça comme un oeuf dont on retirerait le jaune d'oeuf et on le remplacerait par un autre.
 
-  La fonction $\underset{in}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {V_G}~\setminus~m({V_L}) \)
+  La fonction $Emb_{in}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( {V_G}~\setminus~m({V_L}) \)
   qui pointaient vers des noeuds contenus dans \( m({V_L}) \) à des arêtes d'un noeuds de \( {V_H} \setminus n({V_R}) \) à un noeuds de \( n({V_R}) \).
 
   La fonction $\underset{out}{Emb}$ est utilisée pour rediriger les arêtes partant de noeuds contenus dans \( m({V_L}) \)
@@ -651,7 +651,7 @@ title=\lstname                   % show the filename of files included with \lst
   \subsection{Fonction de tracking}
 
   \subsubsection{Définition}
-  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,\underset{in}{Emb} ,\underset{out}{Emb} ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
+  Si \(G\) derive \(H\) grâce à une production \( P = (L,R,Emb_{in} ,\underset{out}{Emb} ) \) via $m$ et $n$, alors la fonction de tracking $tr : {V_G} \rightarrow {V_H} $ est définie comme suit :
   \[ tr(v) =
   \begin{cases}
     n \circ trp \circ m^{-1}(v) & \text{si }v\text{ est une node de }m(L)\\
@@ -677,7 +677,7 @@ title=\lstname                   % show the filename of files included with \lst
 
         \node [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] at (0,1)  (varLeft) {var V};
 
-        \draw[red, arrows={-Triangle[angle=90:10pt,red,fill=black]}]  (1,1) -- (3,1);
+        \draw[thick,->] (1,1) -- (3,1);
         \node[red] at (2,0.5) {P1};
 
         \node (rect) at (4,2) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=3] (setter) {Setter M};
@@ -697,7 +697,7 @@ title=\lstname                   % show the filename of files included with \lst
         \node at (3,2) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=1] (varLeft) {var V};
         \node (rect) at (3,0) [draw,thick,minimum width=1cm,minimum height=0.5cm] (vdLeft) {VD};
 
-        \draw [red, arrows={-Triangle[angle=90:10pt,red,fill=black]}]  (4,1) -- (6,1);
+        \draw[thick,->] (4,1) -- (6,1);
         \node[red] at (5,0.5) {P2};
 
         \node at (7,2) [draw,thick,minimum width=1cm,minimum height=0.5cm,label=4] (mdSetter) {MD};
