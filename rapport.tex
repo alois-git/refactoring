@@ -1,5 +1,4 @@
 \documentclass[a4paper, 12pt]{article}
-
 \usepackage{listings}
 \usepackage{color}
 \usepackage[frenchb]{babel}
@@ -63,12 +62,15 @@ columns=flexible,
 title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
-\title{Formalizing Refactorings with graphe Transformation}
-\author{Paulus Alois}
-
 \begin{document}
 
+  \title{Formalisation du refactoring par transformations de graphe \\
+  \normalsize {(Année préparatoire au Master en Sciences Informatiques, Faculte des Sciences, UMONS)}}
+  \author{Paulus Alois}
+
   \maketitle
+
+  \newpage
 
   \tableofcontents
 
@@ -127,7 +129,7 @@ title=\lstname                   % show the filename of files included with \lst
   Pour régler ce problème nous aurons besoin des graphes d'expressions expliqués ci dessous.\label{subsec:grapheExpression}
 
 
-  \begin{myfig}{contraintes}{Exemple de contrainte non représentable}
+  \begin{myfig}{contraintes}{Contraintes non représentables}
     \begin{enumerate}
       \item {\scriptsize une classe ne peut pas contenir plusieurs variables avec le même nom}
       \item {\scriptsize une classe ne peut pas contenir plusieurs méthodes avec la même signature}
@@ -830,18 +832,19 @@ title=\lstname                   % show the filename of files included with \lst
   Le but de cet article était de prouver que le refactoring n'altérait pas le comportement d'un programme.
   A cet effet, il fallait créer un modèle simple et compatible avec les outils de refactoring actuels. Nous avons donc choisi de représenter le code source des programmes sous forme de graphe
   et les transformations effectuées sur ce code source lors d'un refactoring sous forme de transformations de graphe.
-  Puis, nous avons ajouté des contraintes à ces graphes de programme à l'aide d'un graphe de type et d'autres mécanismes.
+  Puis, nous avons ajouté des contraintes à ces graphes de programme à l'aide d'un graphe de type.
 
   Finalement, il nous a fallu prouver la conservation de certaines propriétés dans ces graphes après l'application de transformations.
 
   Malgré cela, certains problèmes ont persistés et nous ont amené à faire des ajouts et des compromis sur ce modèle:
 
   \begin{itemize}[label=\textbullet]
-    \item Concernant les préconditions, certaines contraintes ont été mises de côté. Par exemple pour le refactoring PullUpMethod, on ne contrôlle pas que le corps de la méthode soit identique mais uniquement la signature de la méthode.
+    \item Concernant les préconditions, certaines contraintes ont été mises de côté. Par exemple lors du refactoring PullUpMethod,
+    on ne contrôlle pas si le corps de la méthode est identique mais uniquement si sa signature l'est.
 
     \item Concernant la représentation en graphe, dans le but de supporter un large éventail de langage nous avons ajouté la possibilité d'attacher des attribus supplémentaires aux noeuds.
 
-    \item Concernant le graphe de type, toutes les contraintes n'étaient pas représentables à l'aide de ce graphe de type, nous avons donc introduit les graphes d'expressions.
+    \item Concernant le graphe de type, toutes les contraintes n'étaient pas représentables à l'aide de ce graphe de type, nous avons donc introduit les graphes d'expression.
 
     \item Concernant les transformations de graphe, tout les types de refactoring ne peuvent pas être représenté à l'aide d'une seule transformation.
     Dés lors ils ont été représentés en une succession de plusieurs tranformations.
@@ -850,7 +853,7 @@ title=\lstname                   % show the filename of files included with \lst
   \end{itemize}
 
   Il est difficile de dire si cette approche formelle peut réellement servir dans une approche pratique et être utilisée par un outil de refactoring.
-  De plus bien que ce modèle soit relativement simple, il nécessite une bonne connaissance des graphes mathématiques.
+  De plus bien que ce modèle soit relativement simple, il nécessite une bonne connaissance de la théorie des graphes.
 
   Toutefois, l'approche utilisée reste efficace pour définir l'effet que chaque refactoring a sur le code source d'un programme.
 
