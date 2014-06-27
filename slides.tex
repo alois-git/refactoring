@@ -118,7 +118,7 @@
 	}
 
 	%%------Slide------%%
-	\frame{\frametitle{Transformations de graphe (1/4)}
+	\frame{\frametitle{Transformations de graphe (1/5)}
 	\begin{itemize}
 		\item Définir les conditions avant transformation
 		\item Remplacement d'un sous graph par un autre sous graph
@@ -127,70 +127,70 @@
 	}
 
 	%%------Slide------%%
-	\frame{\frametitle{Transformations de graphe : LHS / RHS et Préconditions (2/4)}
+	\frame{\frametitle{Transformations de graphe : LHS / RHS et Préconditions (2/5)}
 	\includegraphics[width=110mm,scale=0.5,keepaspectratio]{full.png}
 	}
 
 	%%------Slide------%%
-	\frame{\frametitle{Transformations de graphe : Application d'une transformation (3/4)}
+	\frame{\frametitle{Transformations de graphe : Application d'une transformation (3/5)}
 	\includegraphics[width=\linewidth,height=\textheight,keepaspectratio]{slidesProgramGraph.png}
 	}
 
 	%%------Slide------%%
-	\frame{\frametitle{Transformations de graphe : Application d'une transformation (4/4)}
+	\frame{\frametitle{Transformations de graphe : Application d'une transformation (4/5)}
 	\includegraphics[width=\linewidth,height=\textheight,keepaspectratio]{afterTransfo.png}
 	}
 
 	%%------Slide------%%
-	% \frame{\frametitle{Transformations de graphe : Redirection des arrêtes (5/5)}
-	% \begin{tikzpicture}
-	% 	\node[] at (1,5) {L};
-	% 	\draw (2,4) ellipse (1cm and 0.5cm);
-	% 	\node[] at (2,4) {V};
-	%
-	% 	\draw[->] (5,4) -- +(1,0);
-	% 	\draw[->] (2,3) -- +(0,-1) node[anchor=west] {m};
-	%
-	% 	\node[] at (8,5) {R};
-	% 	\draw (9,4) ellipse (1cm and 0.5cm);
-	% 	\node[] at (9,4) {W};
-	%
-	% 	\draw[->] (9,3) -- +(0,-1) node[anchor=west] {n};
-	%
-	% 	\node[] at (0,1) {G};
-	% 	\draw (2,0) ellipse (2cm and 1cm);
-	% 	\draw (2,0) ellipse (1cm and 0.5cm);
-	% 	\node[] at (2,0) {m(v)};
-	%
-	% 	\draw[->] (5,0) -- +(1,0);
-	%
-	% 	\draw (3.5,0) node[anchor=south] (e) {\textbullet};
-	% 	\draw (2.5,0) node[anchor=south] (f) {\textbullet};
-	%
-	% 	\draw (0.5,0) node[anchor=south] (g) {\textbullet};
-	% 	\draw (1.5,0) node[anchor=south] (h) {\textbullet};
-	%
-	% 	\draw[-latex] (e.west) to[out=90,in=70] (f.east);
-	%
-	% 	\draw[-latex] (h.west) to[out=70,in=90] (g.east);
-	%
-	% 	\node[] at (7,1) {H};
-	% 	\draw (9,0) ellipse (2cm and 1cm);
-	% 	\draw (9,0) ellipse (1cm and 0.5cm);
-	% 	\node[] at (9,0) {n(w)};
-	%
-	% 	\draw (10.5,0) node[anchor=south] (a) {\textbullet};
-	% 	\draw (9.5,0) node[anchor=south] (b) {\textbullet};
-	%
-	% 	\draw (7.5,0) node[anchor=south] (c) {\textbullet};
-	% 	\draw (8.5,0) node[anchor=south] (d) {\textbullet};
-	%
-	% 	\draw[-latex] (a.west) to[out=90,in=70] (b.east);
-	%
-	% 	\draw[-latex] (d.west) to[out=70,in=90] (c.east);
-	%
-	% \end{tikzpicture}
-	% }
+	\frame{\frametitle{Transformations de graphe : Redirection des arrêtes (5/5)}
+	\begin{tikzpicture}
+		\node[] at (1,5) {L};
+		\draw (2,4) ellipse (1cm and 0.5cm);
+		\node[] at (2,4) {V};
+
+		\draw[->] (5,4) -- +(1,0);
+		\draw[->] (2,3) -- +(0,-1) node[anchor=west] {m};
+
+		\node[] at (8,5) {R};
+		\draw (9,4) ellipse (1cm and 0.5cm);
+		\node[] at (9,4) {W};
+
+		\draw[->] (9,3) -- +(0,-1) node[anchor=west] {n};
+
+		\node[] at (0,1) {G};
+		\draw (2,0) ellipse (2cm and 1cm);
+		\draw (2,0) ellipse (1cm and 0.5cm);
+		\node[] at (2,0) {m(v)};
+
+		\draw[->] (5,0) -- +(1,0);
+
+		\draw (3.5,0) node[anchor=south] (e) {\textbullet};
+		\draw (2.5,0) node[anchor=south] (f) {\textbullet};
+
+		\draw (0.5,0) node[anchor=south] (g) {\textbullet};
+		\draw (1.5,0) node[anchor=south] (h) {\textbullet};
+
+		\draw[-latex] (e.west) to[out=90,in=70] (f.east);
+
+		\draw[-latex] (h.west) to[out=70,in=90] (g.east);
+
+		\node[] at (7,1) {H};
+		\draw (9,0) ellipse (2cm and 1cm);
+		\draw (9,0) ellipse (1cm and 0.5cm);
+		\node[] at (9,0) {n(w)};
+
+		\draw (10.5,0) node[anchor=south] (a) {\textbullet};
+		\draw (9.5,0) node[anchor=south] (b) {\textbullet};
+
+		\draw (7.5,0) node[anchor=south] (c) {\textbullet};
+		\draw (8.5,0) node[anchor=south] (d) {\textbullet};
+
+		\draw[-latex] (a.west) to[out=90,in=70] (b.east);
+
+		\draw[-latex] (d.west) to[out=70,in=90] (c.east);
+
+	\end{tikzpicture}
+	}
 
 	%%------Slide------%%
 	\frame{\frametitle{Conservation du comportement(1/3)}
